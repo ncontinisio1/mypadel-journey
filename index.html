@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+<title>IRON LOG - NICKI EDITABLE</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+body{font-family:'Inter',sans-serif;background:#0a0a0b;color:white}
+.bebas{font-family:'Bebas Neue',sans-serif}
+.set-btn{transition:all.12s}
+.set-btn:active{transform:scale(.88)}
+.tab-active{background:white;color:black;box-shadow:0 4px 20px rgba(255,255,255,.15)}
+.tab-inactive{background:#1a1a1e;color:rgba(255,255,255,.45);border:1px solid rgba(255,255,255,.06)}
+.no-scrollbar::-webkit-scrollbar{display:none}
+</style>
+</head>
+<body>
+<div class="max-w-[440px] mx-auto px-4 pb-48">
+<div class="pt-7 flex justify-between items-end">
+<div><p class="text-[10px] tracking-[0.4em] text-white/30 font-bold">IRON LOG • EDITABLE • SBD 5W</p><h1 class="bebas text-[42px] leading-[0.85] mt-2" id="dayTitle"></h1></div>
+<div class="w-[52px] h-[52px] rounded-full bg-white text-black flex items-center justify-center font-black text-[13px]" id="gProgress">0%</div>
+</div>
+<div class="flex gap-2 mt-6 mb-5 overflow-x-auto no-scrollbar pb-1">
+<button onclick="setDay('LUN')" id="tab-LUN" class="px-4 py-3 rounded-full text-[11px] font-black whitespace-nowrap">LUN • PANCA</button>
+<button onclick="setDay('MAR')" id="tab-MAR" class="px-4 py-3 rounded-full text-[11px] font-black whitespace-nowrap">MAR • STACCO</button>
+<button onclick="setDay('MER')" id="tab-MER" class="px-4 py-3 rounded-full text-[11px] font-black whitespace-nowrap">MER • OHP</button>
+<button onclick="setDay('GIO')" id="tab-GIO" class="px-4 py-3 rounded-full text-[11px] font-black whitespace-nowrap">GIO • SQUAT</button>
+</div>
+<div class="bg-[#16161a] rounded-full p-1.5 flex gap-1 mb-6 border border-white/[0.04]">
+<button onclick="setW('W1')" id="w-W1" class="flex-1 py-2.5 rounded-full text-xs font-black">W1</button>
+<button onclick="setW('W2')" id="w-W2" class="flex-1 py-2.5 rounded-full text-xs font-bold">W2</button>
+<button onclick="setW('W3')" id="w-W3" class="flex-1 py-2.5 rounded-full text-xs font-bold">W3</button>
+<button onclick="setW('W4')" id="w-W4" class="flex-1 py-2.5 rounded-full text-xs font-bold">W4</button>
+<button onclick="setW('W5')" id="w-W5" class="flex-1 py-2.5 rounded-full text-xs font-bold">DEL</button>
+</div>
+<div class="mb-4 flex justify-between items-center"><p class="text-[10px] text-white/40 tracking-widest">TOCCA IL PESO PER MODIFICARLO ✎</p><button onclick="resetWeights()" class="text-[10px] text-orange-400/70 underline">Reset default</button></div>
+<div id="list" class="space-y-4"></div>
+<div class="mt-8 p-5 rounded-[20px] bg-[#16161a] border border-white/5"><p class="text-[11px] text-white/50 leading-[18px]" id="notes"></p></div>
+</div>
+<div id="timer" class="fixed bottom-0 left-0 right-0 z-50 translate-y-full transition-transform duration-300"><div class="max-w-[440px] mx-auto bg-[#1e1e22] rounded-t-[28px] border border-white/10 p-5"><div class="flex justify-between items-center"><div><p class="text-[10px] tracking-widest text-white/40 font-bold" id="tLabel">RECUPERO</p><p class="text-[52px] font-black leading-none" id="tTime">03:00</p><p class="text-[12px] text-white/50 mt-1" id="tNext"></p></div><button onclick="stopT()" class="w-14 h-14 rounded-full bg-white text-black font-black">✓</button></div><div class="mt-4 h-1.5 bg-white/10 rounded-full overflow-hidden"><div id="tBar" class="h-full bg-white"></div></div></div></div>
+<script>
+const DEFAULTS={
+LUN:{
+ title:"LUNEDI<br><span class='text-white/30'>PANCA PIANA</span>",
+ notes:"RISC: 40x8 → 6

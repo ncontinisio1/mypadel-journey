@@ -18,4 +18,92 @@ body{font-family:'Inter',sans-serif;background:#0a0a0b;color:white}
 <body>
 <div class="max-w-[440px] mx-auto px-4 pb-48">
 <div class="pt-7 flex justify-between items-end"><div><p class="text-[10px] tracking-[0.4em] text-white/30 font-bold">IRON LOG • V8 SUPERSET • EDITABLE</p><h1 class="bebas text-[42px] leading-[0.85] mt-2" id="dayTitle"></h1></div><div class="w-[52px] h-[52px] rounded-full bg-white text-black flex items-center justify-center font-black text-[13px]" id="gProgress">0%</div></div>
-<div class="flex gap-2 mt-6 mb-5 overflow-x
+<div class="flex gap-2 mt-6 mb-5 overflow-x-auto no-scrollbar"><button onclick="setDay('LUN')" id="tab-LUN" class="px-4 py-3 rounded-full text-[11px] font-black">LUN • PANCA</button><button onclick="setDay('MAR')" id="tab-MAR" class="px-4 py-3 rounded-full text-[11px] font-black">MAR • STACCO</button><button onclick="setDay('MER')" id="tab-MER" class="px-4 py-3 rounded-full text-[11px] font-black">MER • OHP</button><button onclick="setDay('GIO')" id="tab-GIO" class="px-4 py-3 rounded-full text-[11px] font-black">GIO • SQUAT</button></div>
+<div class="bg-[#16161a] rounded-full p-1.5 flex gap-1 mb-5 border border-white/[0.04]"><button onclick="setW('W1')" id="w-W1" class="flex-1 py-2.5 rounded-full text-xs font-black">W1</button><button onclick="setW('W2')" id="w-W2" class="flex-1 py-2.5 rounded-full text-xs font-bold">W2</button><button onclick="setW('W3')" id="w-W3" class="flex-1 py-2.5 rounded-full text-xs font-bold">W3</button><button onclick="setW('W4')" id="w-W4" class="flex-1 py-2.5 rounded-full text-xs font-bold">W4</button><button onclick="setW('W5')" id="w-W5" class="flex-1 py-2.5 rounded-full text-xs font-bold">DEL</button></div>
+<div class="mb-4 flex justify-between"><p class="text-[9px] tracking-widest text-white/30">TOCCA PESO PER MODIFICARE • SUPERSET IN ARANCIONE</p><button onclick="resetW()" class="text-[10px] text-orange-400/70 underline">Reset</button></div>
+<div id="list" class="space-y-5"></div>
+</div>
+<div id="timer" class="fixed bottom-0 left-0 right-0 z-50 translate-y-full transition-transform duration-300"><div class="max-w-[440px] mx-auto bg-[#1e1e22] rounded-t-[28px] border border-white/10 p-5"><div class="flex justify-between items-center"><div><p class="text-[10px] tracking-widest text-white/40 font-bold" id="tLabel">RECUPERO</p><p class="text-[52px] font-black leading-none" id="tTime">01:30</p><p class="text-[12px] text-white/50 mt-1" id="tNext"></p></div><button onclick="stopT()" class="w-14 h-14 rounded-full bg-white text-black font-black">✓</button></div><div class="mt-4 h-1.5 bg-white/10 rounded-full overflow-hidden"><div id="tBar" class="h-full bg-white"></div></div></div></div>
+<script>
+const DEFAULTS={
+LUN:{
+ title:"LUNEDI<br><span class='text-white/30'>PANCA</span>",
+ groups:[
+  {sup:false, exs:[{id:1,name:"Panca Piana",sets:4,rec:180,w:{W1:"4x4 @ 82,5kg",W2:"4x4 @ 85kg",W3:"5x3 @ 87,5kg",W4:"3x3 @ 90kg + 2x5 @75kg",W5:"2x5 @ 60kg"}}]},
+  {sup:true, exs:[{id:2,name:"Panca Inclinata Bilanciere",sets:4,rec:90,w:{W1:"4x8 @ 50kg",W2:"4x9 @ 50kg",W3:"4x10 @ 50kg",W4:"4x8 @ 52,5kg",W5:"4x8 @ 44kg"}},{id:3,name:"Rematore Bilanciere",sets:4,rec:90,w:{W1:"4x8 @ 70kg",W2:"4x9 @ 70kg",W3:"4x10 @ 70kg",W4:"4x8 @ 72,5kg",W5:"4x10 @ 26kg"}}]},
+  {sup:true, exs:[{id:4,name:"Dip Parallele",sets:3,rec:90,w:{W1:"3x8 @ BW",W2:"3x10 @ BW",W3:"3x12 @ BW",W4:"3x8 @ +5kg",W5:"3x12 @ 8-10kg"}},{id:5,name:"Face Pull",sets:3,rec:75,w:{W1:"3x15 @ 18kg",W2:"3x15 @ 18kg",W3:"3x15 @ 18kg",W4:"3x15 @ 18kg",W5:"3x10 @ leggero"}}]},
+  {sup:true, exs:[{id:6,name:"Alzate Laterali",sets:3,rec:60,w:{W1:"3x12 @ 10kg",W2:"3x13 @ 10kg",W3:"3x15 @ 10kg",W4:"3x12 @ 12,5kg",W5:"3x12 @ 8kg"}},{id:7,name:"Curl Manubri",sets:3,rec:60,w:{W1:"3x10 @ 12,5kg",W2:"3x11 @ 12,5kg",W3:"3x12 @ 12,5kg",W4:"3x12 @ 15kg",W5:"3x10 @ 10kg"}}]},
+ ]
+},
+MAR:{
+ title:"MARTEDI<br><span class='text-white/30'>STACCO</span>",
+ groups:[
+  {sup:false, exs:[{id:1,name:"Stacco da Terra",sets:4,rec:180,w:{W1:"4x3 @ 117,5kg",W2:"4x3 @ 120kg",W3:"5x3 @ 122,5kg",W4:"3x3 @ 125kg + 2x5 @107,5kg",W5:"2x5 @ 87,5kg"}}]},
+  {sup:false, exs:[{id:2,name:"Pause Squat",sets:3,rec:150,w:{W1:"3x3 @ 87,5kg",W2:"3x3 @ 90kg",W3:"3x3 @ 92,5kg",W4:"3x3 @ 95kg",W5:"3x3 @ 70kg"}}]},
+  {sup:true, exs:[{id:3,name:"Leg Curl Seduto",sets:3,rec:90,w:{W1:"3x10 @ 45kg",W2:"3x11 @ 45kg",W3:"3x12 @ 45kg",W4:"3x10 @ 50kg",W5:"3x8-10/gamba"}},{id:4,name:"Leg Extension",sets:3,rec:90,w:{W1:"3x12 @ 54kg",W2:"3x13 @ 54kg",W3:"3x15 @ 54kg",W4:"3x12 @ 60kg",W5:"3x10/gamba @16-20kg"}}]},
+  {sup:false, exs:[{id:5,name:"Hip Thrust",sets:3,rec:75,w:{W1:"3x10 @ 25kg",W2:"3x11 @ 25kg",W3:"3x12 @ 25kg",W4:"3x10 @ 30kg",W5:"4x12-15 @"}}]},
+ ]
+},
+MER:{
+ title:"MERCOLEDI<br><span class='text-white/30'>OHP</span>",
+ groups:[
+  {sup:false, exs:[{id:1,name:"OHP",sets:5,rec:180,w:{W1:"5x4 @ 47,5kg",W2:"5x4 @ 50kg",W3:"5x3 @ 52,5kg",W4:"3x3 @ 55kg + 2x5 @45kg",W5:"2x5 @ 37,5kg"}}]},
+  {sup:true, exs:[{id:2,name:"Landmine Press",sets:4,rec:90,w:{W1:"4x10 @ 20kg",W2:"4x11 @ 20kg",W3:"4x12 @ 20kg",W4:"4x10 @ 22,5kg",W5:"3x10 @ 15kg"}},{id:3,name:"Trazioni",sets:4,rec:90,w:{W1:"4x8 @ BW",W2:"4x9 @ BW",W3:"4x10 @ BW",W4:"4x8 @ BW+2,5kg",W5:"3x8 @ BW"}}]},
+  {sup:true, exs:[{id:4,name:"Rematore Cavo Basso",sets:3,rec:75,w:{W1:"3x10 @ 60kg",W2:"3x11 @ 60kg",W3:"3x12 @ 60kg",W4:"3x10 @ 65kg",W5:"3x10 @ 50kg"}},{id:5,name:"Face Pull",sets:3,rec:75,w:{W1:"3x15 @ 18kg",W2:"3x15 @ 18kg",W3:"3x15 @ 18kg",W4:"3x15 @ 18kg",W5:"3x10 @ leggero"}}]},
+  {sup:false, exs:[{id:6,name:"Alzate Laterali",sets:3,rec:60,w:{W1:"3x12 @ 10kg",W2:"3x13 @ 10kg",W3:"3x15 @ 10kg",W4:"3x12 @ 12,5kg",W5:"3x10 @ 8kg"}}]},
+  {sup:true, exs:[{id:7,name:"Push-down Tricipiti",sets:3,rec:60,w:{W1:"3x12 @ 35kg",W2:"3x13 @ 35kg",W3:"3x15 @ 35kg",W4:"3x12 @ 40kg",W5:"3x10 @ 30kg"}},{id:8,name:"Curl ai Cavi",sets:3,rec:60,w:{W1:"3x12 @ 25kg",W2:"3x13 @ 25kg",W3:"3x15 @ 25kg",W4:"3x12 @ 30kg",W5:"3x10 @ 20kg"}}]},
+ ]
+},
+GIO:{
+ title:"GIOVEDI<br><span class='text-white/30'>SQUAT</span>",
+ groups:[
+  {sup:false, exs:[{id:1,name:"Back Squat",sets:4,rec:180,w:{W1:"4x4 @ 110kg",W2:"4x4 @ 112,5kg",W3:"5x3 @ 115kg",W4:"3x3 @ 117,5kg + 2x5 @100kg",W5:"2x5 @ 80kg"}}]},
+  {sup:true, exs:[{id:2,name:"Bulgarian Split Squat",sets:3,rec:90,w:{W1:"3x8/gamba @ 17,5kg",W2:"3x8/gamba @ 17,5kg",W3:"3x8/gamba @ 17,5kg",W4:"3x8/gamba @ 17,5kg",W5:"2x8/gamba @ 10kg"}},{id:3,name:"Leg Curl Sdraiato",sets:3,rec:90,w:{W1:"3x10 @ 32kg",W2:"3x11 @ 32kg",W3:"3x12 @ 32kg",W4:"3x10 @ 37kg",W5:"3x10 @ leggero"}}]},
+  {sup:false, exs:[{id:4,name:"Leg Press",sets:3,rec:75,w:{W1:"3x12 @ 170kg",W2:"3x12 @ 170kg",W3:"3x12 @ 170kg",W4:"3x12 @ 170kg",W5:"3x10 @ leggero"}}]},
+ ]
+}
+};
+let DAY=localStorage.getItem('daySup')||'LUN',W=localStorage.getItem('wSup')||'W1',done=JSON.parse(localStorage.getItem('doneSup')||'{}'),customW=JSON.parse(localStorage.getItem('customWSup')||'{}'),tInt=null,left=0,totalT=0;
+function kD(d,e,i){return d+'_'+W+'_'+e+'_'+i} function kW(d,e){return d+'_'+W+'_'+e} function getW(d,id){const k=kW(d,id); if(customW[k]!==undefined) return customW[k]; const g=DEFAULTS[d].groups.flatMap(x=>x.exs).find(x=>x.id===id); return g?g.w[W]:''}
+function setDay(d){DAY=d;localStorage.setItem('daySup',d);render()} function setW(w){W=w;localStorage.setItem('wSup',w);render()}
+function toggle(ex,idx,rec,name){const k=kD(DAY,ex,idx);done[k]=!done[k];localStorage.setItem('doneSup',JSON.stringify(done));render(); if(done[k]) start(rec,name,ex,idx)}
+function editW(id){const k=kW(DAY,id); const cur=getW(DAY,id); const n=prompt('Modifica peso:',cur); if(n!==null){customW[k]=n.trim(); localStorage.setItem('customWSup',JSON.stringify(customW)); render();}}
+function resetW(){if(confirm('Reset pesi custom?')){localStorage.removeItem('customWSup'); customW={}; render();}}
+function start(sec,name,exId,idx){left=sec; totalT=sec; document.getElementById('tLabel').innerText=name.toUpperCase()+' • RECUPERO SUPERSET'; const g=DEFAULTS[DAY].groups.find(gr=>gr.exs.some(e=>e.id===exId)); const total=g?g.exs[0].sets:3; document.getElementById('tNext').innerText=idx+1>=total?'Super set completato':'Prossimo giro: '+(idx+2)+'/'+total; document.getElementById('timer').classList.remove('translate-y-full'); upd(); clearInterval(tInt); tInt=setInterval(()=>{left--;upd(); if(left<=0)stopT()},1000);}
+function upd(){const m=Math.floor(left/60),s=left%60; document.getElementById('tTime').innerText=String(m).padStart(2,'0')+':'+String(s).padStart(2,'0'); document.getElementById('tBar').style.width=(left/totalT*100)+'%'}
+function stopT(){clearInterval(tInt); document.getElementById('timer').classList.add('translate-y-full')}
+function render(){
+ document.getElementById('dayTitle').innerHTML=DEFAULTS[DAY].title;
+ document.querySelectorAll('[id^="tab-"]').forEach(b=>{b.className=b.id.slice(4)===DAY?'px-4 py-3 rounded-full text-[11px] font-black tab-active':'px-4 py-3 rounded-full text-[11px] font-bold tab-inactive'});
+ document.querySelectorAll('[id^="w-W"]').forEach(b=>{b.className=b.id.slice(2)===W?'flex-1 py-2.5 rounded-full text-xs font-black bg-white text-black':'flex-1 py-2.5 rounded-full text-xs font-bold text-white/40 bg-[#16161a] border border-white/5'});
+ let total=0,doneC=0; DEFAULTS[DAY].groups.forEach(gr=>{gr.exs.forEach(ex=>{for(let i=0;i<ex.sets;i++){total++; if(done[kD(DAY,ex.id,i)]) doneC++}})});
+ document.getElementById('gProgress').innerText=total?Math.round(doneC/total*100)+'%':'0%';
+ document.getElementById('list').innerHTML=DEFAULTS[DAY].groups.map(gr=>{
+  const isSup=gr.sup;
+  const badge=isSup?`<div class="flex items-center gap-2 mb-3"><span class="bg-orange-400 text-black text-[9px] font-black px-2.5 py-1 rounded-full tracking-widest">SUPER SET</span><span class="text-[10px] text-orange-400/60">${gr.exs.map(e=>e.name).join(' + ')}</span></div>`:'';
+  const setsCount=gr.exs[0].sets;
+  let doneInGroup=0; for(let i=0;i<setsCount;i++){ if(gr.exs.every(ex=>done[kD(DAY,ex.id,i)])) doneInGroup++ }
+  const pct=setsCount?doneInGroup/setsCount*100:0;
+  const allDone=doneInGroup===setsCount;
+  const exBlocks=gr.exs.map(ex=>{
+   const curW=getW(DAY,ex.id); const isCustom=customW[kW(DAY,ex.id)]!==undefined;
+   return `<div class="flex-1"><p class="font-bold text-[13px]">${ex.name}</p><button onclick="editW(${ex.id})" class="mt-2 w-full text-left bg-[#1e1e22] border ${isCustom?'border-orange-400/60':'border-white/10'} rounded-full px-3 py-2.5 text-[12px] font-black flex justify-between"><span>${curW}</span><span class="${isCustom?'text-orange-400':'text-white/30'} text-[10px]">${isCustom?'MOD':'✎'}</span></button></div>`
+  }).join(isSup?`<div class="w-px bg-orange-400/20 mx-2 self-stretch"></div>`:'');
+  const setButtons=Array.from({length:setsCount}).map((_,i)=>{
+   const bothDone=gr.exs.every(ex=>done[kD(DAY,ex.id,i)]);
+   return `<button onclick="grSupToggle([${gr.exs.map(e=>e.id).join(',')}],${i},${gr.exs[0].rec},'${gr.exs[0].name}')" class="w-[52px] h-[52px] rounded-full border-2 flex items-center justify-center font-black text-[15px] ${bothDone?'bg-orange-400 border-orange-400 text-black shadow-[0_0_20px_rgba(251,146,60,.4)]':'border-white/20 text-white/40'}">${bothDone?'✓':i+1}</button>`
+  }).join('');
+  return `<div class="${isSup?'super-border':'border-white/[0.06]'} bg-[#16161a] rounded-[22px] p-4 border"><div class="flex justify-between items-start mb-1">${badge?badge:`<p class="text-[10px] text-white/30 tracking-widest mb-3">${gr.exs[0].name}</p>`}<span class="text-[10px] px-2.5 py-1 rounded-full font-black ${allDone?'bg-white text-black':'bg-white/10 text-white/60'}">${doneInGroup}/${setsCount}</span></div>${isSup?`<div class="flex gap-2">${exBlocks}</div>`:`${exBlocks}`}<div class="mt-3 h-1.5 bg-white/10 rounded-full overflow-hidden"><div class="h-full ${isSup?'bg-orange-400':'bg-white'} transition-all" style="width:${pct}%"></div></div><div class="flex gap-2.5 mt-4 flex-wrap">${setButtons}<span class="ml-auto self-center text-[10px] text-white/20">${Math.floor(gr.exs[0].rec/60)}:${String(gr.exs[0].rec%60).padStart(2,'0')}</span></div></div>`
+ }).join('');
+}
+function grSupToggle(ids,idx,rec,name){
+ const anyNot=ids.some(id=>!done[kD(DAY,id,idx)]);
+ ids.forEach(id=>{done[kD(DAY,id,idx)]=anyNot});
+ localStorage.setItem('doneSup',JSON.stringify(done)); render();
+ if(anyNot) start(rec,name,ids[0],idx);
+}
+window.grSupToggle=grSupToggle;
+render();
+</script>
+</body>
+</html>

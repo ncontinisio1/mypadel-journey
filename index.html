@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
-<title>IRON LOG V9 WEIGHT ONLY</title>
+<title>IRON LOG V10</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
 <style>
@@ -17,59 +17,27 @@ body{font-family:'Inter',sans-serif;background:#0a0a0b;color:white}
 </head>
 <body>
 <div class="max-w-[440px] mx-auto px-4 pb-48">
-<div class="pt-7 flex justify-between items-end"><div><p class="text-[10px] tracking-[0.4em] text-white/30 font-bold">IRON LOG • V9 • PESO EDITABILE</p><h1 class="bebas text-[42px] leading-[0.85] mt-2" id="dayTitle"></h1></div><div class="w-[52px] h-[52px] rounded-full bg-white text-black flex items-center justify-center font-black text-[13px]" id="gProgress">0%</div></div>
+<div class="pt-7 flex justify-between items-end"><div><p class="text-[10px] tracking-[0.4em] text-white/30 font-bold">IRON LOG • V10 • PESO EDITABILE</p><h1 class="bebas text-[42px] leading-[0.85] mt-2" id="dayTitle"></h1></div><div class="w-[52px] h-[52px] rounded-full bg-white text-black flex items-center justify-center font-black text-[13px]" id="gProgress">0%</div></div>
 <div class="flex gap-2 mt-6 mb-5 overflow-x-auto no-scrollbar"><button onclick="setDay('LUN')" id="tab-LUN" class="px-4 py-3 rounded-full text-[11px] font-black">LUN • PANCA</button><button onclick="setDay('MAR')" id="tab-MAR" class="px-4 py-3 rounded-full text-[11px] font-black">MAR • STACCO</button><button onclick="setDay('MER')" id="tab-MER" class="px-4 py-3 rounded-full text-[11px] font-black">MER • OHP</button><button onclick="setDay('GIO')" id="tab-GIO" class="px-4 py-3 rounded-full text-[11px] font-black">GIO • SQUAT</button></div>
 <div class="bg-[#16161a] rounded-full p-1.5 flex gap-1 mb-5 border border-white/[0.04]"><button onclick="setW('W1')" id="w-W1" class="flex-1 py-2.5 rounded-full text-xs font-black">W1</button><button onclick="setW('W2')" id="w-W2" class="flex-1 py-2.5 rounded-full text-xs font-bold">W2</button><button onclick="setW('W3')" id="w-W3" class="flex-1 py-2.5 rounded-full text-xs font-bold">W3</button><button onclick="setW('W4')" id="w-W4" class="flex-1 py-2.5 rounded-full text-xs font-bold">W4</button><button onclick="setW('W5')" id="w-W5" class="flex-1 py-2.5 rounded-full text-xs font-bold">DEL</button></div>
-<div class="mb-4 flex justify-between"><p class="text-[9px] tracking-widest text-orange-400/60">CLICCA SOLO SUL PESO PER MODIFICARLO • SERIE/REPS BLOCCATE</p><button onclick="resetW()" class="text-[10px] text-white/30 underline">Reset pesi</button></div>
+<div class="mb-4 flex justify-between"><p class="text-[9px] tracking-widest text-white/40">TOCCA IL PESO PER MODIFICARLO • SERIE x REPS FISSE</p><button onclick="resetW()" class="text-[10px] text-white/30 underline">Reset</button></div>
 <div id="list" class="space-y-5"></div>
 </div>
 <div id="timer" class="fixed bottom-0 left-0 right-0 z-50 translate-y-full transition-transform duration-300"><div class="max-w-[440px] mx-auto bg-[#1e1e22] rounded-t-[28px] border border-white/10 p-5"><div class="flex justify-between items-center"><div><p class="text-[10px] tracking-widest text-white/40 font-bold" id="tLabel">RECUPERO</p><p class="text-[52px] font-black leading-none" id="tTime">01:30</p><p class="text-[12px] text-white/50 mt-1" id="tNext"></p></div><button onclick="stopT()" class="w-14 h-14 rounded-full bg-white text-black font-black">✓</button></div><div class="mt-4 h-1.5 bg-white/10 rounded-full overflow-hidden"><div id="tBar" class="h-full bg-white"></div></div></div></div>
 <script>
 const D={
-LUN:{
- title:"LUNEDI<br><span class='text-white/30'>PANCA</span>",
- groups:[
-  {sup:false, exs:[{id:1,name:"Panca Piana",sets:4,rec:180,s:{W1:"4x4",W2:"4x4",W3:"5x3",W4:"3x3 + 2x5",W5:"2x5"},w:{W1:"82,5kg",W2:"85kg",W3:"87,5kg",W4:"90kg + 75kg",W5:"60kg"}}]},
-  {sup:true, exs:[{id:2,name:"Panca Inclinata Bilanciere",sets:4,rec:90,s:{W1:"4x8",W2:"4x9",W3:"4x10",W4:"4x8",W5:"4x8"},w:{W1:"50kg",W2:"50kg",W3:"50kg",W4:"52,5kg",W5:"44kg"}},{id:3,name:"Rematore Bilanciere",sets:4,rec:90,s:{W1:"4x8",W2:"4x9",W3:"4x10",W4:"4x8",W5:"4x10"},w:{W1:"70kg",W2:"70kg",W3:"70kg",W4:"72,5kg",W5:"26kg"}}]},
-  {sup:true, exs:[{id:4,name:"Dip Parallele",sets:3,rec:90,s:{W1:"3x8",W2:"3x10",W3:"3x12",W4:"3x8",W5:"3x12"},w:{W1:"BW",W2:"BW",W3:"BW",W4:"+5kg",W5:"8-10kg"}},{id:5,name:"Face Pull",sets:3,rec:75,s:{W1:"3x15",W2:"3x15",W3:"3x15",W4:"3x15",W5:"3x10"},w:{W1:"18kg",W2:"18kg",W3:"18kg",W4:"18kg",W5:"leggero"}}]},
-  {sup:true, exs:[{id:6,name:"Alzate Laterali",sets:3,rec:60,s:{W1:"3x12",W2:"3x13",W3:"3x15",W4:"3x12",W5:"3x12"},w:{W1:"10kg",W2:"10kg",W3:"10kg",W4:"12,5kg",W5:"8kg"}},{id:7,name:"Curl Manubri",sets:3,rec:60,s:{W1:"3x10",W2:"3x11",W3:"3x12",W4:"3x12",W5:"3x10"},w:{W1:"12,5kg",W2:"12,5kg",W3:"12,5kg",W4:"15kg",W5:"10kg"}}]},
- ]
-},
-MAR:{
- title:"MARTEDI<br><span class='text-white/30'>STACCO</span>",
- groups:[
-  {sup:false, exs:[{id:1,name:"Stacco da Terra",sets:4,rec:180,s:{W1:"4x3",W2:"4x3",W3:"5x3",W4:"3x3 + 2x5",W5:"2x5"},w:{W1:"117,5kg",W2:"120kg",W3:"122,5kg",W4:"125kg + 107,5kg",W5:"87,5kg"}}]},
-  {sup:false, exs:[{id:2,name:"Pause Squat",sets:3,rec:150,s:{W1:"3x3",W2:"3x3",W3:"3x3",W4:"3x3",W5:"3x3"},w:{W1:"87,5kg",W2:"90kg",W3:"92,5kg",W4:"95kg",W5:"70kg"}}]},
-  {sup:true, exs:[{id:3,name:"Leg Curl Seduto",sets:3,rec:90,s:{W1:"3x10",W2:"3x11",W3:"3x12",W4:"3x10",W5:"3x8-10/gamba"},w:{W1:"45kg",W2:"45kg",W3:"45kg",W4:"50kg",W5:""}},{id:4,name:"Leg Extension",sets:3,rec:90,s:{W1:"3x12",W2:"3x13",W3:"3x15",W4:"3x12",W5:"3x10/gamba"},w:{W1:"54kg",W2:"54kg",W3:"54kg",W4:"60kg",W5:"16-20kg"}}]},
-  {sup:false, exs:[{id:5,name:"Hip Thrust",sets:3,rec:75,s:{W1:"3x10",W2:"3x11",W3:"3x12",W4:"3x10",W5:"4x12-15"},w:{W1:"25kg",W2:"25kg",W3:"25kg",W4:"30kg",W5:""}}]},
- ]
-},
-MER:{
- title:"MERCOLEDI<br><span class='text-white/30'>OHP</span>",
- groups:[
-  {sup:false, exs:[{id:1,name:"OHP",sets:5,rec:180,s:{W1:"5x4",W2:"5x4",W3:"5x3",W4:"3x3 + 2x5",W5:"2x5"},w:{W1:"47,5kg",W2:"50kg",W3:"52,5kg",W4:"55kg + 45kg",W5:"37,5kg"}}]},
-  {sup:true, exs:[{id:2,name:"Landmine Press",sets:4,rec:90,s:{W1:"4x10",W2:"4x11",W3:"4x12",W4:"4x10",W5:"3x10"},w:{W1:"20kg",W2:"20kg",W3:"20kg",W4:"22,5kg",W5:"15kg"}},{id:3,name:"Trazioni",sets:4,rec:90,s:{W1:"4x8",W2:"4x9",W3:"4x10",W4:"4x8",W5:"3x8"},w:{W1:"BW",W2:"BW",W3:"BW",W4:"BW+2,5kg",W5:"BW"}}]},
-  {sup:true, exs:[{id:4,name:"Rematore Cavo Basso",sets:3,rec:75,s:{W1:"3x10",W2:"3x11",W3:"3x12",W4:"3x10",W5:"3x10"},w:{W1:"60kg",W2:"60kg",W3:"60kg",W4:"65kg",W5:"50kg"}},{id:5,name:"Face Pull",sets:3,rec:75,s:{W1:"3x15",W2:"3x15",W3:"3x15",W4:"3x15",W5:"3x10"},w:{W1:"18kg",W2:"18kg",W3:"18kg",W4:"18kg",W5:"leggero"}}]},
-  {sup:false, exs:[{id:6,name:"Alzate Laterali",sets:3,rec:60,s:{W1:"3x12",W2:"3x13",W3:"3x15",W4:"3x12",W5:"3x10"},w:{W1:"10kg",W2:"10kg",W3:"10kg",W4:"12,5kg",W5:"8kg"}}]},
-  {sup:true, exs:[{id:7,name:"Push-down Tricipiti",sets:3,rec:60,s:{W1:"3x12",W2:"3x13",W3:"3x15",W4:"3x12",W5:"3x10"},w:{W1:"35kg",W2:"35kg",W3:"35kg",W4:"40kg",W5:"30kg"}},{id:8,name:"Curl ai Cavi",sets:3,rec:60,s:{W1:"3x12",W2:"3x13",W3:"3x15",W4:"3x12",W5:"3x10"},w:{W1:"25kg",W2:"25kg",W3:"25kg",W4:"30kg",W5:"20kg"}}]},
- ]
-},
-GIO:{
- title:"GIOVEDI<br><span class='text-white/30'>SQUAT</span>",
- groups:[
-  {sup:false, exs:[{id:1,name:"Back Squat",sets:4,rec:180,s:{W1:"4x4",W2:"4x4",W3:"5x3",W4:"3x3 + 2x5",W5:"2x5"},w:{W1:"110kg",W2:"112,5kg",W3:"115kg",W4:"117,5kg + 100kg",W5:"80kg"}}]},
-  {sup:true, exs:[{id:2,name:"Bulgarian Split Squat",sets:3,rec:90,s:{W1:"3x8/gamba",W2:"3x8/gamba",W3:"3x8/gamba",W4:"3x8/gamba",W5:"2x8/gamba"},w:{W1:"17,5kg",W2:"17,5kg",W3:"17,5kg",W4:"17,5kg",W5:"10kg"}},{id:3,name:"Leg Curl Sdraiato",sets:3,rec:90,s:{W1:"3x10",W2:"3x11",W3:"3x12",W4:"3x10",W5:"3x10"},w:{W1:"32kg",W2:"32kg",W3:"32kg",W4:"37kg",W5:"leggero"}}]},
-  {sup:false, exs:[{id:4,name:"Leg Press",sets:3,rec:75,s:{W1:"3x12",W2:"3x12",W3:"3x12",W4:"3x12",W5:"3x10"},w:{W1:"170kg",W2:"170kg",W3:"170kg",W4:"170kg",W5:"leggero"}}]},
- ]
-}
+LUN:{title:"LUNEDI<br><span class='text-white/30'>PANCA</span>",groups:[{sup:false,exs:[{id:1,name:"Panca Piana",sets:4,rec:180,s:{W1:"4x4",W2:"4x4",W3:"5x3",W4:"3x3 + 2x5",W5:"2x5"},w:{W1:"82,5kg",W2:"85kg",W3:"87,5kg",W4:"90kg + 75kg",W5:"60kg"}}]},{sup:true,exs:[{id:2,name:"Panca Inclinata Bilanciere",sets:4,rec:90,s:{W1:"4x8",W2:"4x9",W3:"4x10",W4:"4x8",W5:"4x8"},w:{W1:"50kg",W2:"50kg",W3:"50kg",W4:"52,5kg",W5:"44kg"}},{id:3,name:"Rematore Bilanciere",sets:4,rec:90,s:{W1:"4x8",W2:"4x9",W3:"4x10",W4:"4x8",W5:"4x10"},w:{W1:"70kg",W2:"70kg",W3:"70kg",W4:"72,5kg",W5:"26kg"}}]},{sup:true,exs:[{id:4,name:"Dip Parallele",sets:3,rec:90,s:{W1:"3x8",W2:"3x10",W3:"3x12",W4:"3x8",W5:"3x12"},w:{W1:"BW",W2:"BW",W3:"BW",W4:"+5kg",W5:"8-10kg"}},{id:5,name:"Face Pull",sets:3,rec:75,s:{W1:"3x15",W2:"3x15",W3:"3x15",W4:"3x15",W5:"3x10"},w:{W1:"18kg",W2:"18kg",W3:"18kg",W4:"18kg",W5:"leggero"}}]},{sup:true,exs:[{id:6,name:"Alzate Laterali",sets:3,rec:60,s:{W1:"3x12",W2:"3x13",W3:"3x15",W4:"3x12",W5:"3x12"},w:{W1:"10kg",W2:"10kg",W3:"10kg",W4:"12,5kg",W5:"8kg"}},{id:7,name:"Curl Manubri",sets:3,rec:60,s:{W1:"3x10",W2:"3x11",W3:"3x12",W4:"3x12",W5:"3x10"},w:{W1:"12,5kg",W2:"12,5kg",W3:"12,5kg",W4:"15kg",W5:"10kg"}}]},]},
+MAR:{title:"MARTEDI<br><span class='text-white/30'>STACCO</span>",groups:[{sup:false,exs:[{id:1,name:"Stacco da Terra",sets:4,rec:180,s:{W1:"4x3",W2:"4x3",W3:"5x3",W4:"3x3 + 2x5",W5:"2x5"},w:{W1:"117,5kg",W2:"120kg",W3:"122,5kg",W4:"125kg + 107,5kg",W5:"87,5kg"}}]},{sup:false,exs:[{id:2,name:"Pause Squat",sets:3,rec:150,s:{W1:"3x3",W2:"3x3",W3:"3x3",W4:"3x3",W5:"3x3"},w:{W1:"87,5kg",W2:"90kg",W3:"92,5kg",W4:"95kg",W5:"70kg"}}]},{sup:true,exs:[{id:3,name:"Leg Curl Seduto",sets:3,rec:90,s:{W1:"3x10",W2:"3x11",W3:"3x12",W4:"3x10",W5:"3x8-10/gamba"},w:{W1:"45kg",W2:"45kg",W3:"45kg",W4:"50kg",W5:""}},{id:4,name:"Leg Extension",sets:3,rec:90,s:{W1:"3x12",W2:"3x13",W3:"3x15",W4:"3x12",W5:"3x10/gamba"},w:{W1:"54kg",W2:"54kg",W3:"54kg",W4:"60kg",W5:"16-20kg"}}]},{sup:false,exs:[{id:5,name:"Hip Thrust",sets:3,rec:75,s:{W1:"3x10",W2:"3x11",W3:"3x12",W4:"3x10",W5:"4x12-15"},w:{W1:"25kg",W2:"25kg",W3:"25kg",W4:"30kg",W5:""}}]},]},
+MER:{title:"MERCOLEDI<br><span class='text-white/30'>OHP</span>",groups:[{sup:false,exs:[{id:1,name:"OHP",sets:5,rec:180,s:{W1:"5x4",W2:"5x4",W3:"5x3",W4:"3x3 + 2x5",W5:"2x5"},w:{W1:"47,5kg",W2:"50kg",W3:"52,5kg",W4:"55kg + 45kg",W5:"37,5kg"}}]},{sup:true,exs:[{id:2,name:"Landmine Press",sets:4,rec:90,s:{W1:"4x10",W2:"4x11",W3:"4x12",W4:"4x10",W5:"3x10"},w:{W1:"20kg",W2:"20kg",W3:"20kg",W4:"22,5kg",W5:"15kg"}},{id:3,name:"Trazioni",sets:4,rec:90,s:{W1:"4x8",W2:"4x9",W3:"4x10",W4:"4x8",W5:"3x8"},w:{W1:"BW",W2:"BW",W3:"BW",W4:"BW+2,5kg",W5:"BW"}}]},{sup:true,exs:[{id:4,name:"Rematore Cavo Basso",sets:3,rec:75,s:{W1:"3x10",W2:"3x11",W3:"3x12",W4:"3x10",W5:"3x10"},w:{W1:"60kg",W2:"60kg",W3:"60kg",W4:"65kg",W5:"50kg"}},{id:5,name:"Face Pull",sets:3,rec:75,s:{W1:"3x15",W2:"3x15",W3:"3x15",W4:"3x15",W5:"3x10"},w:{W1:"18kg",W2:"18kg",W3:"18kg",W4:"18kg",W5:"leggero"}}]},{sup:false,exs:[{id:6,name:"Alzate Laterali",sets:3,rec:60,s:{W1:"3x12",W2:"3x13",W3:"3x15",W4:"3x12",W5:"3x10"},w:{W1:"10kg",W2:"10kg",W3:"10kg",W4:"12,5kg",W5:"8kg"}}]},{sup:true,exs:[{id:7,name:"Push-down Tricipiti",sets:3,rec:60,s:{W1:"3x12",W2:"3x13",W3:"3x15",W4:"3x12",W5:"3x10"},w:{W1:"35kg",W2:"35kg",W3:"35kg",W4:"40kg",W5:"30kg"}},{id:8,name:"Curl ai Cavi",sets:3,rec:60,s:{W1:"3x12",W2:"3x13",W3:"3x15",W4:"3x12",W5:"3x10"},w:{W1:"25kg",W2:"25kg",W3:"25kg",W4:"30kg",W5:"20kg"}}]},]},
+GIO:{title:"GIOVEDI<br><span class='text-white/30'>SQUAT</span>",groups:[{sup:false,exs:[{id:1,name:"Back Squat",sets:4,rec:180,s:{W1:"4x4",W2:"4x4",W3:"5x3",W4:"3x3 + 2x5",W5:"2x5"},w:{W1:"110kg",W2:"112,5kg",W3:"115kg",W4:"117,5kg + 100kg",W5:"80kg"}}]},{sup:true,exs:[{id:2,name:"Bulgarian Split Squat",sets:3,rec:90,s:{W1:"3x8/gamba",W2:"3x8/gamba",W3:"3x8/gamba",W4:"3x8/gamba",W5:"2x8/gamba"},w:{W1:"17,5kg",W2:"17,5kg",W3:"17,5kg",W4:"17,5kg",W5:"10kg"}},{id:3,name:"Leg Curl Sdraiato",sets:3,rec:90,s:{W1:"3x10",W2:"3x11",W3:"3x12",W4:"3x10",W5:"3x10"},w:{W1:"32kg",W2:"32kg",W3:"32kg",W4:"37kg",W5:"leggero"}}]},{sup:false,exs:[{id:4,name:"Leg Press",sets:3,rec:75,s:{W1:"3x12",W2:"3x12",W3:"3x12",W4:"3x12",W5:"3x10"},w:{W1:"170kg",W2:"170kg",W3:"170kg",W4:"170kg",W5:"leggero"}}]},]}
 };
 let DAY=localStorage.getItem('dayV9')||'LUN',W=localStorage.getItem('wV9')||'W1',done=JSON.parse(localStorage.getItem('doneV9')||'{}'),customW=JSON.parse(localStorage.getItem('customWV9')||'{}'),tInt=null,left=0,totalT=0;
 function kD(d,e,i){return d+'_'+W+'_'+e+'_'+i} function kW(d,e){return d+'_'+W+'_'+e}
 function getW(d,id){const k=kW(d,id); if(customW[k]!==undefined) return customW[k]; const g=D[d].groups.flatMap(x=>x.exs).find(x=>x.id===id); return g?g.w[W]:''}
 function getS(d,id){const g=D[d].groups.flatMap(x=>x.exs).find(x=>x.id===id); return g?g.s[W]:''}
 function setDay(d){DAY=d;localStorage.setItem('dayV9',d);render()} function setW(w){W=w;localStorage.setItem('wV9',w);render()}
-function editW(id){const cur=getW(DAY,id); const scheme=getS(DAY,id); const n=prompt(`Modifica SOLO peso per ${scheme}:`,cur); if(n!==null){customW[kW(DAY,id)]=n.trim(); localStorage.setItem('customWV9',JSON.stringify(customW)); render();}}
-function resetW(){if(confirm('Reset pesi custom? Le serie/reps restano originali.')){localStorage.removeItem('customWV9'); customW={}; render();}}
+function editW(id){const cur=getW(DAY,id); const scheme=getS(DAY,id); const n=prompt(`Modifica peso per ${scheme}:`,cur); if(n!==null){customW[kW(DAY,id)]=n.trim(); localStorage.setItem('customWV9',JSON.stringify(customW)); render();}}
+function resetW(){if(confirm('Reset pesi custom?')){localStorage.removeItem('customWV9'); customW={}; render();}}
 function start(sec,name,exId,idx){left=sec; totalT=sec; document.getElementById('tLabel').innerText=name.toUpperCase()+' • RECUPERO'; const g=D[DAY].groups.find(gr=>gr.exs.some(e=>e.id===exId)); const total=g?g.exs[0].sets:3; document.getElementById('tNext').innerText=idx+1>=total?'Fatto':'Prossimo: '+(idx+2)+'/'+total; document.getElementById('timer').classList.remove('translate-y-full'); upd(); clearInterval(tInt); tInt=setInterval(()=>{left--;upd(); if(left<=0)stopT()},1000);}
 function upd(){const m=Math.floor(left/60),s=left%60; document.getElementById('tTime').innerText=String(m).padStart(2,'0')+':'+String(s).padStart(2,'0'); document.getElementById('tBar').style.width=(left/totalT*100)+'%'}
 function stopT(){clearInterval(tInt); document.getElementById('timer').classList.add('translate-y-full')}
@@ -88,7 +56,7 @@ function render(){
   const allDone=doneInGroup===setsCount;
   const exBlocks=gr.exs.map(ex=>{
    const curW=getW(DAY,ex.id); const curS=getS(DAY,ex.id); const isCustom=customW[kW(DAY,ex.id)]!==undefined;
-   return `<div class="flex-1 bg-[#1e1e22] rounded-[16px] p-3 border border-white/5"><p class="font-bold text-[13px] leading-tight">${ex.name}</p><p class="text-[10px] tracking-widest text-white/30 mt-1 font-black">${curS} • BLOCCATO</p><button onclick="editW(${ex.id})" class="mt-2.5 w-full text-left ${isCustom?'bg-orange-400/20 border-orange-400/50':'bg-[#0a0a0b] border-white/10'} border rounded-full px-3 py-2.5 text-[13px] font-black flex justify-between items-center"><span class="flex items-center gap-2"><span class="text-[10px] text-white/40">@</span> ${curW}</span><span class="${isCustom?'text-orange-400':'text-white/30'} text-[11px]">${isCustom?'MOD ✓':'✎ PESO'}</span></button></div>`
+   return `<div class="flex-1 bg-[#1e1e22] rounded-[16px] p-3 border border-white/5"><p class="font-bold text-[13px] leading-tight">${ex.name}</p><div class="mt-2.5 flex items-center gap-2 flex-wrap"><span class="bg-white text-black text-[12px] font-black px-2.5 py-1.5 rounded-full">${curS}</span><span class="text-white/20 font-black">@</span><button onclick="editW(${ex.id})" class="${isCustom?'bg-orange-400 text-black border-orange-400':'bg-[#0a0a0b] text-white border-white/15'} border rounded-full px-3.5 py-1.5 text-[13px] font-black flex items-center gap-1.5"><span>${curW}</span><span class="text-[10px] opacity-60">${isCustom?'✓':'✎'}</span></button></div></div>`
   }).join(isSup?`<div class="w-px bg-orange-400/20 mx-1 self-stretch"></div>`:`<div class="h-2"></div>`);
   const setButtons=Array.from({length:setsCount}).map((_,i)=>{
    const bothDone=gr.exs.every(ex=>done[kD(DAY,ex.id,i)]);

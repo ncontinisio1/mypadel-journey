@@ -3,128 +3,19 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
-<title>IRON LOG - NICKI EDITABLE</title>
+<title>IRON LOG V8 SUPERSET</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
 <style>
 body{font-family:'Inter',sans-serif;background:#0a0a0b;color:white}
 .bebas{font-family:'Bebas Neue',sans-serif}
-.set-btn{transition:all.12s}
-.set-btn:active{transform:scale(.88)}
-.tab-active{background:white;color:black;box-shadow:0 4px 20px rgba(255,255,255,.15)}
+.tab-active{background:white;color:black}
 .tab-inactive{background:#1a1a1e;color:rgba(255,255,255,.45);border:1px solid rgba(255,255,255,.06)}
+.super-border{border:1px solid rgba(251,146,60,.35)!important;box-shadow:0 0 30px rgba(251,146,60,.08)}
 .no-scrollbar::-webkit-scrollbar{display:none}
 </style>
 </head>
 <body>
 <div class="max-w-[440px] mx-auto px-4 pb-48">
-<div class="pt-7 flex justify-between items-end">
-<div><p class="text-[10px] tracking-[0.4em] text-white/30 font-bold">IRON LOG • EDITABLE • SBD 5W</p><h1 class="bebas text-[42px] leading-[0.85] mt-2" id="dayTitle"></h1></div>
-<div class="w-[52px] h-[52px] rounded-full bg-white text-black flex items-center justify-center font-black text-[13px]" id="gProgress">0%</div>
-</div>
-<div class="flex gap-2 mt-6 mb-5 overflow-x-auto no-scrollbar pb-1">
-<button onclick="setDay('LUN')" id="tab-LUN" class="px-4 py-3 rounded-full text-[11px] font-black whitespace-nowrap">LUN • PANCA</button>
-<button onclick="setDay('MAR')" id="tab-MAR" class="px-4 py-3 rounded-full text-[11px] font-black whitespace-nowrap">MAR • STACCO</button>
-<button onclick="setDay('MER')" id="tab-MER" class="px-4 py-3 rounded-full text-[11px] font-black whitespace-nowrap">MER • OHP</button>
-<button onclick="setDay('GIO')" id="tab-GIO" class="px-4 py-3 rounded-full text-[11px] font-black whitespace-nowrap">GIO • SQUAT</button>
-</div>
-<div class="bg-[#16161a] rounded-full p-1.5 flex gap-1 mb-6 border border-white/[0.04]">
-<button onclick="setW('W1')" id="w-W1" class="flex-1 py-2.5 rounded-full text-xs font-black">W1</button>
-<button onclick="setW('W2')" id="w-W2" class="flex-1 py-2.5 rounded-full text-xs font-bold">W2</button>
-<button onclick="setW('W3')" id="w-W3" class="flex-1 py-2.5 rounded-full text-xs font-bold">W3</button>
-<button onclick="setW('W4')" id="w-W4" class="flex-1 py-2.5 rounded-full text-xs font-bold">W4</button>
-<button onclick="setW('W5')" id="w-W5" class="flex-1 py-2.5 rounded-full text-xs font-bold">DEL</button>
-</div>
-<div class="mb-4 flex justify-between items-center"><p class="text-[10px] text-white/40 tracking-widest">TOCCA IL PESO PER MODIFICARLO ✎</p><button onclick="resetWeights()" class="text-[10px] text-orange-400/70 underline">Reset default</button></div>
-<div id="list" class="space-y-4"></div>
-<div class="mt-8 p-5 rounded-[20px] bg-[#16161a] border border-white/5"><p class="text-[11px] text-white/50 leading-[18px]" id="notes"></p></div>
-</div>
-<div id="timer" class="fixed bottom-0 left-0 right-0 z-50 translate-y-full transition-transform duration-300"><div class="max-w-[440px] mx-auto bg-[#1e1e22] rounded-t-[28px] border border-white/10 p-5"><div class="flex justify-between items-center"><div><p class="text-[10px] tracking-widest text-white/40 font-bold" id="tLabel">RECUPERO</p><p class="text-[52px] font-black leading-none" id="tTime">03:00</p><p class="text-[12px] text-white/50 mt-1" id="tNext"></p></div><button onclick="stopT()" class="w-14 h-14 rounded-full bg-white text-black font-black">✓</button></div><div class="mt-4 h-1.5 bg-white/10 rounded-full overflow-hidden"><div id="tBar" class="h-full bg-white"></div></div></div></div>
-<script>
-const DEFAULTS={
-LUN:{
- title:"LUNEDI<br><span class='text-white/30'>PANCA PIANA</span>",
- notes:"RISC: 40x8 → 60x5 → 75% x3. Myo-rep laterali ultimo set.",
- exs:[
-  {id:1,name:"Panca Piana",sets:4,rec:180,focus:"Forza petto",w:{W1:"4x4 @ 82,5kg",W2:"4x4 @ 85kg",W3:"5x3 @ 87,5kg",W4:"3x3 @ 90kg + 2x5 @75kg",W5:"2x5 @ 60kg"}},
-  {id:2,name:"Panca Inclinata",sets:4,rec:90,focus:"Petto alto",w:{W1:"4x8 @ 50kg",W2:"4x9 @ 50kg",W3:"4x10 @ 50kg",W4:"4x8 @ 52,5kg",W5:"4x8 @ 44kg"}},
-  {id:3,name:"Rematore Bilanciere",sets:4,rec:90,focus:"Dorsale",w:{W1:"4x8 @ 70kg",W2:"4x9 @ 70kg",W3:"4x10 @ 70kg",W4:"4x8 @ 72,5kg",W5:"4x10 @ 26kg"}},
-  {id:4,name:"Dip Parallele",sets:3,rec:90,focus:"Petto basso",w:{W1:"3x8 @ BW",W2:"3x10 @ BW",W3:"3x12 @ BW",W4:"3x8 @ +5kg",W5:"3x12 @ 8-10kg"}},
-  {id:5,name:"Face Pull",sets:3,rec:75,focus:"Spalla post",w:{W1:"3x15 @ 18kg",W2:"3x15 @ 18kg",W3:"3x15 @ 18kg",W4:"3x15 @ 18kg",W5:"3x10 @ leggero"}},
-  {id:6,name:"Alzate Laterali",sets:3,rec:60,focus:"Myo-rep",w:{W1:"3x12 @ 10kg",W2:"3x13 @ 10kg",W3:"3x15 @ 10kg",W4:"3x12 @ 12,5kg",W5:"3x12 @ 8kg"}},
-  {id:7,name:"Curl Manubri",sets:3,rec:60,focus:"Bicipiti",w:{W1:"3x10 @ 12,5kg",W2:"3x11 @ 12,5kg",W3:"3x12 @ 12,5kg",W4:"3x12 @ 15kg",W5:"3x10 @ 10kg"}},
- ]
-},
-MAR:{
- title:"MARTEDI<br><span class='text-white/30'>STACCO • HAM/GLUTEI</span>",
- notes:"RISC: cyclette 3min + air squat 2x15 + glute bridge 2x15 + 90/90 + approccio stacco. Reset a terra no touch-and-go.",
- exs:[
-  {id:1,name:"Stacco da Terra",sets:4,rec:180,focus:"Catena post globale",w:{W1:"4x3 @ 117,5kg",W2:"4x3 @ 120kg",W3:"5x3 @ 122,5kg",W4:"3x3 @ 125kg + 2x5 @107,5kg",W5:"2x5 @ 87,5kg"}},
-  {id:2,name:"Pause Squat",sets:3,rec:150,focus:"Quad • pausa",w:{W1:"3x3 @ 87,5kg",W2:"3x3 @ 90kg",W3:"3x3 @ 92,5kg",W4:"3x3 @ 95kg",W5:"3x3 @ 70kg"}},
-  {id:3,name:"Leg Curl Seduto",sets:3,rec:90,focus:"Femorali",w:{W1:"3x10 @ 45kg",W2:"3x11 @ 45kg",W3:"3x12 @ 45kg",W4:"3x10 @ 50kg",W5:"3x8-10/gamba"}},
-  {id:4,name:"Leg Extension",sets:3,rec:90,focus:"Quad isolato",w:{W1:"3x12 @ 54kg",W2:"3x13 @ 54kg",W3:"3x15 @ 54kg",W4:"3x12 @ 60kg",W5:"3x10/gamba @16-20kg"}},
-  {id:5,name:"Hip Thrust",sets:3,rec:75,focus:"Glutei",w:{W1:"3x10 @ 25kg",W2:"3x11 @ 25kg",W3:"3x12 @ 25kg",W4:"3x10 @ 30kg",W5:"4x12-15 @"}},
- ]
-},
-MER:{
- title:"MERCOLEDI<br><span class='text-white/30'>OHP • PUSH+PULL VERT</span>",
- notes:"RISC: cyclette 3min + dead hang + scap pull-up + band pull-apart + face pull leggero.",
- exs:[
-  {id:1,name:"OHP",sets:5,rec:180,focus:"Forza spalle",w:{W1:"5x4 @ 47,5kg",W2:"5x4 @ 50kg",W3:"5x3 @ 52,5kg",W4:"3x3 @ 55kg + 2x5 @45kg",W5:"2x5 @ 37,5kg"}},
-  {id:2,name:"Landmine Press",sets:4,rec:90,focus:"Push verticale",w:{W1:"4x10 @ 20kg",W2:"4x11 @ 20kg",W3:"4x12 @ 20kg",W4:"4x10 @ 22,5kg",W5:"3x10 @ 15kg"}},
-  {id:3,name:"Trazioni",sets:4,rec:90,focus:"Pull verticale",w:{W1:"4x8 @ BW",W2:"4x9 @ BW",W3:"4x10 @ BW",W4:"4x8 @ BW+2,5kg",W5:"3x8 @ BW"}},
-  {id:4,name:"Rematore Cavo Basso",sets:3,rec:75,focus:"Pull orizz",w:{W1:"3x10 @ 60kg",W2:"3x11 @ 60kg",W3:"3x12 @ 60kg",W4:"3x10 @ 65kg",W5:"3x10 @ 50kg"}},
-  {id:5,name:"Face Pull",sets:3,rec:75,focus:"Spalla post",w:{W1:"3x15 @ 18kg",W2:"3x15 @ 18kg",W3:"3x15 @ 18kg",W4:"3x15 @ 18kg",W5:"3x10 @ leggero"}},
-  {id:6,name:"Alzate Laterali",sets:3,rec:60,focus:"Delt laterale",w:{W1:"3x12 @ 10kg",W2:"3x13 @ 10kg",W3:"3x15 @ 10kg",W4:"3x12 @ 12,5kg",W5:"3x10 @ 8kg"}},
-  {id:7,name:"Push-down Tricipiti",sets:3,rec:60,focus:"Tricipiti",w:{W1:"3x12 @ 35kg",W2:"3x13 @ 35kg",W3:"3x15 @ 35kg",W4:"3x12 @ 40kg",W5:"3x10 @ 30kg"}},
-  {id:8,name:"Curl ai Cavi",sets:3,rec:60,focus:"Bicipiti",w:{W1:"3x12 @ 25kg",W2:"3x13 @ 25kg",W3:"3x15 @ 25kg",W4:"3x12 @ 30kg",W5:"3x10 @ 20kg"}},
- ]
-},
-GIO:{
- title:"GIOVEDI<br><span class='text-white/30'>SQUAT • QUAD-DOM</span>",
- notes:"RISC: cyclette 3min + 90/90 + goblet squat 2x10 + glute bridge 2x12. Asimmetria: inizia DX.",
- exs:[
-  {id:1,name:"Back Squat",sets:4,rec:180,focus:"Catena anteriore",w:{W1:"4x4 @ 110kg",W2:"4x4 @ 112,5kg",W3:"5x3 @ 115kg",W4:"3x3 @ 117,5kg + 2x5 @100kg",W5:"2x5 @ 80kg"}},
-  {id:2,name:"Bulgarian Split Squat",sets:3,rec:90,focus:"Quadricipiti",w:{W1:"3x8/gamba @ 17,5kg",W2:"3x8/gamba @ 17,5kg",W3:"3x8/gamba @ 17,5kg",W4:"3x8/gamba @ 17,5kg",W5:"2x8/gamba @ 10kg"}},
-  {id:3,name:"Leg Curl Sdraiato",sets:3,rec:90,focus:"Femorali",w:{W1:"3x10 @ 32kg",W2:"3x11 @ 32kg",W3:"3x12 @ 32kg",W4:"3x10 @ 37kg",W5:"3x10 @ leggero"}},
-  {id:4,name:"Leg Press",sets:3,rec:75,focus:"Quadricipiti",w:{W1:"3x12 @ 170kg",W2:"3x12 @ 170kg",W3:"3x12 @ 170kg",W4:"3x12 @ 170kg",W5:"3x10 @ leggero"}},
- ]
-}
-};
-let DAY=localStorage.getItem('dayEdit')||'LUN';
-let W=localStorage.getItem('wEdit')||'W1';
-let done=JSON.parse(localStorage.getItem('doneEdit')||'{}');
-let customW=JSON.parse(localStorage.getItem('customW')||'{}');
-let tInt=null,left=0,totalT=0;
-function keyDone(day,ex,i){return day+'_'+W+'_'+ex+'_'+i}
-function keyWeight(day,ex){return day+'_'+W+'_'+ex}
-function getWeight(day,exId){const k=keyWeight(day,exId); if(customW[k]!==undefined) return customW[k]; const ex=DEFAULTS[day].exs.find(e=>e.id===exId); return ex? ex.w[W] : ''}
-function setDay(d){DAY=d;localStorage.setItem('dayEdit',d);render()}
-function setW(w){W=w;localStorage.setItem('wEdit',w);render()}
-function toggle(ex,idx,rec,name){const k=keyDone(DAY,ex,idx);done[k]=!done[k];localStorage.setItem('doneEdit',JSON.stringify(done));render(); if(done[k]) start(rec,name,ex,idx)}
-function editWeight(exId){const k=keyWeight(DAY,exId); const cur=getWeight(DAY,exId); const novo=prompt('Modifica peso per '+DAY+' '+W+' - '+DEFAULTS[DAY].exs.find(e=>e.id===exId).name+':',cur); if(novo!==null){customW[k]=novo.trim(); localStorage.setItem('customW',JSON.stringify(customW)); render();}}
-function resetWeights(){if(confirm('Resettare tutti i pesi ai valori originali?')){localStorage.removeItem('customW'); customW={}; render();}}
-function start(sec,name,exId,idx){left=sec; totalT=sec; document.getElementById('tLabel').innerText=name.toUpperCase()+' • RECUPERO'; const total=DEFAULTS[DAY].exs.find(e=>e.id===exId)?.sets||3; document.getElementById('tNext').innerText=idx+1>=total?'Fatto!':'Prossima: '+(idx+2)+'/'+total; document.getElementById('timer').classList.remove('translate-y-full'); upd(); clearInterval(tInt); tInt=setInterval(()=>{left--;upd(); if(left<=0){stopT(); if(navigator.vibrate) navigator.vibrate([180,80,180])}},1000);}
-function upd(){const m=Math.floor(left/60),s=left%60; document.getElementById('tTime').innerText=String(m).padStart(2,'0')+':'+String(s).padStart(2,'0'); document.getElementById('tBar').style.width=(left/totalT*100)+'%'}
-function stopT(){clearInterval(tInt); document.getElementById('timer').classList.add('translate-y-full')}
-function render(){
- document.getElementById('dayTitle').innerHTML=DEFAULTS[DAY].title;
- document.getElementById('notes').innerText=DEFAULTS[DAY].notes;
- document.querySelectorAll('[id^="tab-"]').forEach(b=>{const d=b.id.slice(4); const active=d===DAY; b.className=active?'px-4 py-3 rounded-full text-[11px] font-black whitespace-nowrap tab-active':'px-4 py-3 rounded-full text-[11px] font-bold whitespace-nowrap tab-inactive';});
- document.querySelectorAll('[id^="w-W"]').forEach(b=>{const w=b.id.slice(2); const is=W===w; b.className=is?'flex-1 py-2.5 rounded-full text-xs font-black bg-white text-black':'flex-1 py-2.5 rounded-full text-xs font-bold text-white/40 bg-[#16161a] border border-white/5'; if(w==='W5') b.classList.add(is?'!bg-orange-400!text-black':'!text-orange-400/60')});
- const exs=DEFAULTS[DAY].exs; let total=0,doneC=0; exs.forEach(ex=>{for(let i=0;i<ex.sets;i++){total++; if(done[keyDone(DAY,ex.id,i)]) doneC++}}); document.getElementById('gProgress').innerText=total?Math.round(doneC/total*100)+'%':'0%';
- document.getElementById('list').innerHTML=exs.map(ex=>{
-  let d=0; for(let i=0;i<ex.sets;i++) if(done[keyDone(DAY,ex.id,i)]) d++; const pct=ex.sets?d/ex.sets*100:0; const isDone=d===ex.sets&&ex.sets>0;
-  const curW=getWeight(DAY,ex.id); const isCustom=customW[keyWeight(DAY,ex.id)]!==undefined;
-  return `<div class="bg-[#16161a] rounded-[22px] p-4 border ${isDone?'border-white/20':'border-white/[0.06]'}">
-  <div class="flex justify-between items-start"><div><p class="font-extrabold text-[15px]">${ex.name}</p><p class="text-[10px] text-white/30 mt-1">${ex.focus} • Tap peso per modificare</p></div><div class="text-right"><span class="text-[10px] px-2.5 py-1 rounded-full font-black ${isDone?'bg-white text-black':'bg-white/10 text-white/60'}">${d}/${ex.sets}</span></div></div>
-  <div class="mt-3 flex items-center gap-2"><button onclick="editWeight(${ex.id})" class="flex-1 text-left bg-[#1e1e22] border ${isCustom?'border-orange-400/60':'border-white/10'} rounded-full px-4 py-3 text-[13px] font-black flex justify-between items-center"><span>${curW}</span><span class="text-[11px] ${isCustom?'text-orange-400':'text-white/30'}">${isCustom?'MOD • ✎':'✎'}</span></button></div>
-  <div class="mt-3 h-1.5 bg-white/10 rounded-full overflow-hidden"><div class="h-full bg-white transition-all" style="width:${pct}%"></div></div>
-  <div class="flex gap-2.5 mt-4 flex-wrap">${Array.from({length:ex.sets}).map((_,i)=>{const is=done[keyDone(DAY,ex.id,i)]; return `<button onclick="toggle(${ex.id},${i},${ex.rec},'${ex.name}')" class="set-btn w-[48px] h-[48px] rounded-full border-2 flex items-center justify-center font-black text-[15px] ${is?'bg-white border-white text-black':'border-white/20 text-white/40'}">${is?'✓':i+1}</button>`}).join('')}<span class="ml-auto self-center text-[10px] text-white/20">${Math.floor(ex.rec/60)}:${String(ex.rec%60).padStart(2,'0')}</span></div>
-  </div>`
- }).join('');
-}
-render();
-</script>
-</body>
-</html>
+<div class="pt-7 flex justify-between items-end"><div><p class="text-[10px] tracking-[0.4em] text-white/30 font-bold">IRON LOG • V8 SUPERSET • EDITABLE</p><h1 class="bebas text-[42px] leading-[0.85] mt-2" id="dayTitle"></h1></div><div class="w-[52px] h-[52px] rounded-full bg-white text-black flex items-center justify-center font-black text-[13px]" id="gProgress">0%</div></div>
+<div class="flex gap-2 mt-6 mb-5 overflow-x

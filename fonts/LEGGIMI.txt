@@ -1,1 +1,37 @@
+FONT SELF-HOSTED (opzionale)
+============================
 
+L'app funziona senza nulla in questa cartella: usa il font di sistema
+(SF Pro su iOS, Roboto su Android), che e' gia' una scelta solida.
+
+Se vuoi un carattere tuo:
+
+1. Scarica un font con licenza libera (SIL OFL). Alternative valide:
+   - Inter            github.com/rsms/inter/releases
+   - Instrument Sans  github.com/Instrument/instrument-sans
+   - Geist            github.com/vercel/geist-font
+   - Archivo          github.com/Omnibus-Type/Archivo
+   Per il titolo, se vuoi un condensed vero:
+   - Archivo Expanded / Condensed, Oswald, Anton
+
+2. Convertili in .woff2 (i .ttf pesano 3-5x). Strumenti:
+   - fonttools:  pyftsubset font.ttf --flavor=woff2 --output-file=app-sans.woff2 \
+                   --unicodes=U+0000-00FF,U+2013-2014,U+2022,U+00D7,U+00B7,U+2713,U+270E
+   - oppure un convertitore online woff2
+
+3. Rinominali:
+   ./fonts/app-sans.woff2      (testo e numeri)
+   ./fonts/app-display.woff2   (titoli — puo' essere lo stesso file)
+
+4. In index.html togli i commenti al blocco @font-face in cima al <style>.
+
+5. In sw.js aggiungi i percorsi a ASSETS:
+      './fonts/app-sans.woff2',
+      './fonts/app-display.woff2',
+   e BUMPA la costante BUILD.
+
+Se un file manca o fallisce, il browser ricade sul font di sistema:
+l'app non si rompe.
+
+Nota peso: un woff2 variabile latino sta sui 25-40 KB. Sotto i 100 KB
+totali non intacchi il tempo di avvio offline.

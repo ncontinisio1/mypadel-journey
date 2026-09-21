@@ -1,6 +1,6 @@
 /* IRON LOG — service worker
    >>> BUMP `BUILD` A OGNI DEPLOY. E' cio' che invalida la cache sul telefono. <<< */
-const BUILD = '2026-09-21-1';
+const BUILD = '2026-09-21-4';
 const CACHE = `ironlog-${BUILD}`;
 
 const ASSETS = [

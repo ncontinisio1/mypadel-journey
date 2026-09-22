@@ -127,7 +127,29 @@ h1 .sub{color:var(--t3)}
 .sets{display:flex;gap:10px;margin-top:16px;flex-wrap:wrap;align-items:center}
 .set{width:52px;height:52px;border-radius:50%;border:2px solid rgba(255,255,255,.28);color:var(--t2);font-weight:700;font-size:17px;display:flex;align-items:center;justify-content:center;font-variant-numeric:tabular-nums;letter-spacing:-.01em}
 .set.on{background:var(--acc);border-color:var(--acc);color:#000;box-shadow:0 0 20px rgba(251,146,60,.4)}
-.rec{margin-left:auto;font-size:10px;color:var(--t3)}
+.wu{border:1px dashed rgba(255,255,255,.28);border-radius:18px;padding:14px;margin-bottom:14px}
+.wu-top{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin-bottom:10px}
+.wu-t{font-size:12px;font-weight:900;letter-spacing:.06em;color:var(--t2)}
+.wu-s{font-size:10px;color:var(--t3)}
+.wu-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-top:1px solid var(--line)}
+.wu-row .set{flex:0 0 auto}
+.wu-k{font-size:17px;font-weight:800;font-variant-numeric:tabular-nums}
+.wu-r{font-size:11px;color:var(--t3);margin-left:auto}
+.sm-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:4px 0 2px}
+.sm-c{border:1px solid var(--line);border-radius:16px;padding:12px}
+.sm-l{font-size:10px;letter-spacing:.06em;color:var(--t3);font-weight:800}
+.sm-v{font-size:26px;font-weight:900;font-variant-numeric:tabular-nums;letter-spacing:-.02em;margin-top:2px}
+.sm-v .u{font-size:12px;font-weight:700;color:var(--t3);margin-left:3px}
+.sm-d{font-size:11px;font-weight:800;margin-top:4px}
+.sm-d.up{color:#49d17a}.sm-d.dn{color:var(--acc)}.sm-d.eq{color:var(--t3)}
+.sm-row{display:flex;justify-content:space-between;gap:10px;padding:7px 0;border-bottom:1px solid var(--line);font-size:12px}
+.sm-row b{font-weight:800;font-variant-numeric:tabular-nums}
+.mx{width:100%;border-collapse:collapse;font-size:13px}
+.mx th{text-align:left;font-size:10px;letter-spacing:.06em;color:var(--t3);font-weight:800;padding:6px 4px;border-bottom:1px solid var(--line)}
+.mx td{padding:8px 4px;border-bottom:1px solid var(--line);font-variant-numeric:tabular-nums}
+.mx input{width:74px;background:var(--bg);border:1px solid rgba(255,255,255,.22);color:#fff;border-radius:10px;padding:8px;font-size:15px;font-weight:800;text-align:right;font-variant-numeric:tabular-nums}
+.mx .pc{font-weight:800}
+.rec{margin-left:auto;font-size:10px;color:var(--t3);background:none;border:1px dashed var(--line);border-radius:999px;padding:3px 8px}
 
 .sheet{position:fixed;left:0;right:0;bottom:0;z-index:60;transform:translateY(110%);transition:transform .3s ease}
 .sheet.open{transform:translateY(0)}
@@ -138,8 +160,8 @@ h1 .sub{color:var(--t3)}
 .t-next{font-size:12px;color:var(--t2);margin:4px 0 0}
 .t-ok{width:56px;height:56px;border-radius:50%;background:#fff;color:#000;font-weight:900;font-size:20px;flex:0 0 auto;text-align:center}
 .t-add{font-size:12px;font-weight:800;color:var(--t2);border:1px solid var(--line);border-radius:999px;padding:6px 12px;text-align:center}
-.rpe{display:flex;gap:8px;margin-top:14px;align-items:center;flex-wrap:wrap}
-.rpe span{font-size:10px;letter-spacing:.14em;color:var(--t3);font-weight:800}
+.chiprow{display:flex;gap:8px;margin-top:14px;align-items:center;flex-wrap:wrap}
+.chiprow span{font-size:10px;letter-spacing:.14em;color:var(--t3);font-weight:800}
 .chip{border:1px solid rgba(255,255,255,.24);border-radius:999px;padding:6px 12px;font-size:12px;font-weight:800;color:var(--t2)}
 .chip.on{background:#fff;color:#000;border-color:#fff}
 .tbar{margin-top:14px;height:6px;background:rgba(255,255,255,.12);border-radius:999px;overflow:hidden}
@@ -198,6 +220,7 @@ h1 .sub{color:var(--t3)}
   <div class="bar">
     <p class="hint">I PALLINI SONO LE SERIE</p>
     <div style="display:flex;gap:10px">
+      <button class="linkbtn" onclick="openMax()">Massimali</button>
       <button class="linkbtn" onclick="openHistory()">Storico</button>
       <button class="linkbtn" onclick="openMenu()">Dati</button>
     </div>
@@ -220,17 +243,50 @@ h1 .sub{color:var(--t3)}
       <div style="display:flex;flex-direction:column;gap:8px;align-items:center">
         <button class="t-ok" onclick="stopT()" aria-label="Chiudi timer">&#10003;</button>
         <button class="t-add" onclick="addTime(30)">+30s</button>
+        <button class="t-add" onclick="addTime(-15)">&#8722;15s</button>
       </div>
     </div>
-    <div class="rpe" id="rpeRow">
-      <span>RPE</span>
-      <button class="chip" onclick="setRpe(6)">6</button>
-      <button class="chip" onclick="setRpe(7)">7</button>
-      <button class="chip" onclick="setRpe(8)">8</button>
-      <button class="chip" onclick="setRpe(9)">9</button>
-      <button class="chip" onclick="setRpe(10)">10</button>
+    <div class="chiprow" id="recRow">
+      <span>REC</span>
+      <button class="chip" data-sec="45"  onclick="setRest(45)">45s</button>
+      <button class="chip" data-sec="60"  onclick="setRest(60)">60s</button>
+      <button class="chip" data-sec="75"  onclick="setRest(75)">75s</button>
+      <button class="chip" data-sec="90"  onclick="setRest(90)">90s</button>
+      <button class="chip" data-sec="120" onclick="setRest(120)">2&#8242;</button>
+      <button class="chip" data-sec="150" onclick="setRest(150)">2&#8242;30</button>
+      <button class="chip" data-sec="180" onclick="setRest(180)">3&#8242;</button>
+      <button class="chip" data-sec="240" onclick="setRest(240)">4&#8242;</button>
+      <button class="chip" id="recReset" onclick="useDefaultRest()" style="display:none">&#8634; default</button>
+      <span id="recDef" class="hmeta" style="font-size:10px;color:var(--t3)"></span>
     </div>
     <div class="tbar"><i id="tBar"></i></div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-top:10px;gap:10px">
+      <span id="aState" class="hmeta" style="font-size:10px;color:var(--t3)"></span>
+      <button id="ntLink" class="wu-s" style="display:none;text-decoration:underline" onclick="askNotif()">attiva notifiche</button>
+      <button class="t-add" onclick="testBeep()">Test suono</button>
+    </div>
+  </div>
+</div>
+
+<!-- EDIT RECUPERO -->
+<div class="sheet" id="recsheet">
+  <div class="sheet-in">
+    <p class="t-label" id="rsTitle">RECUPERO</p>
+    <div class="chiprow" id="rsRow">
+      <button class="chip" data-sec="45"  onclick="pickRec(45)">45s</button>
+      <button class="chip" data-sec="60"  onclick="pickRec(60)">60s</button>
+      <button class="chip" data-sec="75"  onclick="pickRec(75)">75s</button>
+      <button class="chip" data-sec="90"  onclick="pickRec(90)">90s</button>
+      <button class="chip" data-sec="120" onclick="pickRec(120)">2&#8242;</button>
+      <button class="chip" data-sec="150" onclick="pickRec(150)">2&#8242;30</button>
+      <button class="chip" data-sec="180" onclick="pickRec(180)">3&#8242;</button>
+      <button class="chip" data-sec="240" onclick="pickRec(240)">4&#8242;</button>
+    </div>
+    <p class="t-next" id="rsHint" style="margin-top:10px"></p>
+    <div class="row2" style="margin-top:12px">
+      <button class="btn sec" onclick="pickRecDefault()">Torna al default</button>
+      <button class="btn" onclick="closeSheets()">Fatto</button>
+    </div>
   </div>
 </div>
 
@@ -245,6 +301,40 @@ h1 .sub{color:var(--t3)}
       <button class="btn sec" onclick="resetOneW()">Default</button>
       <button class="btn pri" onclick="saveW()">Salva</button>
     </div>
+  </div>
+</div>
+
+<!-- SOMMARIO SESSIONE -->
+<div class="sheet" id="sumsheet">
+  <div class="sheet-in">
+    <p class="t-label" id="smTitle">SESSIONE COMPLETATA</p>
+    <div class="scroll" id="smBody"></div>
+    <div class="row2"><button class="btn pri" onclick="closeSheets()">Chiudi</button></div>
+  </div>
+</div>
+
+<!-- MASSIMALI -->
+<div class="sheet" id="maxsheet">
+  <div class="sheet-in">
+    <p class="t-label">MASSIMALI &bull; OVERVIEW</p>
+    <div class="scroll" id="mxBody"></div>
+    <p class="hmeta" style="margin-top:12px">e1RM &egrave; stimato dal log con la formula di Epley. Il massimale che inserisci ha sempre la precedenza.</p>
+
+    <div class="wu-top" style="margin-top:18px"><span class="wu-t">RISCALDAMENTO</span></div>
+    <div class="chiprow" id="wuRampRow">
+      <span>RAMPA</span>
+      <button class="chip" data-r="short" onclick="setWuRamp('short')">Breve</button>
+      <button class="chip" data-r="std"   onclick="setWuRamp('std')">Standard</button>
+      <button class="chip" data-r="long"  onclick="setWuRamp('long')">Lunga</button>
+    </div>
+    <div class="chiprow" id="wuBaseRow">
+      <span>BASE</span>
+      <button class="chip" data-b="work" onclick="setWuBase('work')">Peso di lavoro</button>
+      <button class="chip" data-b="max"  onclick="setWuBase('max')">Massimale</button>
+    </div>
+    <p class="hmeta" id="wuHint" style="margin-top:8px"></p>
+
+    <div class="row2"><button class="btn pri" onclick="closeSheets()">Chiudi</button></div>
   </div>
 </div>
 
@@ -264,6 +354,12 @@ h1 .sub{color:var(--t3)}
     <div class="row2"><button class="btn sec" onclick="exportJSON()">Esporta JSON</button><button class="btn sec" onclick="importJSON()">Importa</button></div>
     <div class="row2"><button class="btn sec" onclick="resetDay()">Azzera serie di oggi</button></div>
     <div class="row2"><button class="btn sec" onclick="resetAllW()">Reset pesi custom</button></div>
+    <div class="row2"><button class="btn sec" onclick="resetAllRecs()">Reset recuperi custom</button></div>
+    <div class="row2"><button class="btn sec" onclick="resetMaxes()">Reset massimali</button></div>
+    <div class="row2"><button class="btn sec" onclick="openSummary()">Sommario sessione</button></div>
+    <div class="row2"><button class="btn sec" onclick="testBeep()">Test suono</button></div>
+    <div class="row2"><button class="btn sec" id="ntBtn" onclick="askNotif()">Notifiche</button></div>
+    <p class="hmeta" id="ntHint" style="margin-top:8px"></p>
     <div class="row2"><button class="btn pri" onclick="closeSheets()">Chiudi</button></div>
     <input type="file" id="fileIn" accept="application/json" hidden>
   </div>
@@ -360,7 +456,9 @@ GIO:{name:"GIOVED\u00CC", focus:"SQUAT", groups:[
 /* ============================ STATO / STORAGE ============================ */
 const VER='v10';
 const K={day:`ironlog.${VER}.day`,week:`ironlog.${VER}.week`,done:`ironlog.${VER}.done`,
-         custom:`ironlog.${VER}.custom`,log:`ironlog.${VER}.log`,backup:`ironlog.${VER}.lastBackup`};
+         custom:`ironlog.${VER}.custom`,log:`ironlog.${VER}.log`,backup:`ironlog.${VER}.lastBackup`,
+         recs:`ironlog.${VER}.recs`,maxes:`ironlog.${VER}.maxes`,cfg:`ironlog.${VER}.cfg`,
+         timer:`ironlog.${VER}.timer`};
 const load=(k,f)=>{try{return JSON.parse(localStorage.getItem(k))??f}catch(e){return f}};
 const save=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch(e){alert('Storage pieno o non disponibile. Esporta i dati.')}};
 
@@ -370,8 +468,57 @@ const save=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch(e){alert(
   if(old) localStorage.setItem(K.done,old);
 })();
 
+/* ---------------------------- SESSIONE DATATA ----------------------------
+   Le chiavi di `done` portano la data della sessione: i pallini di lunedi'
+   non restano accesi fino al reset manuale, si spengono da soli al cambio
+   sessione. Il confine e' alle 04:00 e non a mezzanotte, cosi' un allenamento
+   serale che sfora le 24:00 resta la stessa sessione. */
+const SESSION_CUTOFF_H = 4;
+function SD(){
+  const d = new Date(Date.now() - SESSION_CUTOFF_H*3600e3);
+  return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+}
+/* chiavi vecchie a 4 campi (DAY|W|ex|i) -> sessione corrente: un allenamento
+   gia' in corso non si perde nell'aggiornamento */
+(function migrateDone(){
+  const raw=JSON.parse(localStorage.getItem(K.done)||'{}');
+  let touched=false, out={};
+  Object.keys(raw).forEach(k=>{
+    if(k.split('|').length===4){ out[SD()+'|'+k]=raw[k]; touched=true; }
+    else out[k]=raw[k];
+  });
+  if(touched) localStorage.setItem(K.done,JSON.stringify(out));
+})();
+/* l'RPE non esiste piu': ripulisco le voci di log che lo portano ancora dietro */
+(function stripRpe(){
+  try{
+    const raw=JSON.parse(localStorage.getItem(K.log)||'[]');
+    let touched=false;
+    raw.forEach(e=>{ if('rpe' in e){ delete e.rpe; touched=true; } });
+    if(touched) localStorage.setItem(K.log,JSON.stringify(raw));
+  }catch(e){}
+})();
+
+/* le sessioni oltre i 21 giorni non servono piu': lo storico vero vive in `log` */
+function pruneDone(){
+  const cut=new Date(Date.now()-21*864e5).toISOString().slice(0,10);
+  const keep={}; let dropped=0;
+  Object.keys(done).forEach(k=>{
+    const d=k.split('|')[0];
+    if(/^\d{4}-\d{2}-\d{2}$/.test(d) && d<cut){ dropped++; return; }
+    keep[k]=done[k];
+  });
+  if(dropped){ done=keep; save(K.done,done); }
+}
+
 let DAY=load(K.day,'LUN'), W=load(K.week,'W1');
 let done=load(K.done,{}), custom=load(K.custom,{}), log=load(K.log,[]);
+/* recupero personalizzato per esercizio: {chiaveEsercizio: secondi} */
+let recs=load(K.recs,{});
+/* massimali dichiarati: {chiaveEsercizio: kg} */
+let maxes=load(K.maxes,{});
+/* preferenze riscaldamento */
+let cfg=Object.assign({wuRamp:'std',wuBase:'work',bar:20},load(K.cfg,{}));
 if(!D[DAY]) DAY='LUN';
 if(WEEKS.indexOf(W)<0) W='W1';
 
@@ -400,7 +547,7 @@ const grpSets = (gr)=> Math.max.apply(null,gr.exs.map(exSets));
 
 /* ============================ PESI ============================ */
 const ck=(d,k)=>`${d}|${W}|${k}`;
-const dk=(d,k,i)=>`${d}|${W}|${k}|${i}`;
+const dk=(d,k,i)=>`${SD()}|${d}|${W}|${k}|${i}`;
 function weightOf(d,ex){ const c=custom[ck(d,ex.k)]; return c!==undefined?c:(ex.w[W]||{}); }
 function isCustom(d,ex){ return custom[ck(d,ex.k)]!==undefined; }
 const num = n => (Math.round(n*100)/100).toString().replace('.',',');
@@ -421,29 +568,84 @@ function kgAt(w,sch,i){
 }
 
 /* ============================ AUDIO / VIBRAZIONE / WAKE LOCK ============================ */
-let actx=null;
-function unlockAudio(){
-  if(actx) return;
-  const AC=window.AudioContext||window.webkitAudioContext; if(!AC) return;
-  actx=new AC();
-  const b=actx.createBuffer(1,1,22050),s=actx.createBufferSource();
-  s.buffer=b; s.connect(actx.destination); s.start(0);
-}
-document.addEventListener('pointerdown',()=>{unlockAudio();keepAwake();},{once:true});
+/* Due percorsi audio indipendenti, perche' nessuno dei due da' solo garanzie su iOS:
+   1) ELEMENTO <audio> con WAV inline  -> passa dal canale media: suona anche con
+      l'interruttore silenzioso attivo. Usato quando la pagina e' in primo piano.
+   2) WEBAUDIO PRE-SCHEDULATO sul clock audio -> suona anche se i timer JS vengono
+      congelati (schermo spento / app in background), dove setInterval non gira.
+   Il loop silenzioso tiene viva la sessione audio mentre il recupero e' in corso. */
+const BEEP_URI='data:audio/wav;base64,UklGRpAcAABXQVZFZm10IBAAAAABAAEAESsAABErAAABAAgAZGF0YWwcAACAgIKDhIOBfXp3dnh9g4qPkI6HfnRtamx0f4yXnJuThXVnX15mdYiapqmikn1nWFFWZn2WqrSyo4pvVkhHVG2LqLvAtp19XEQ6QVh6nrzLyLORakcyMEFjjbTP18qqflMyIyxJdaTM4d7EmWY6HhowWY293ujYs4FPKRkiQnGkzuXiyJxpPB8bL1eKudvm2LSEUy0bI0Fvocvi4cmebD8iHS9Wh7bY5Ne2h1YwHiNAbJ3H3+DJoG9DJR4vVISy1OLXt4lZMyAkP2qaxN3fyaJyRiggL1OBr9Hg1riMXTciJT9ol8Da3cqkdUorIjBRfqzO3ta5jmA6JSY+ZpS919zKpnhNLiQwUHyoy9vVupFjPScnPWSRutXayqd7UDElME95pcjZ1LuTZkAqKT1ijrfS2cqpflM0JzFNd6LF19O7lWlDLCo9YIu0z9fKqoBWNykxTHSfwtXTvJdsRi8rPV+Jsc3WyauDWTorMkxynL/T0r2Zb0kxLT1dhq7K1MmshVw8LTJLcJm80NG9mnFMNC49XISrx9LJrodfPy8zSm6Xuc7PvZx0TzYvPVqBqMXQyK+JYkIxNElslLfMzr2edlI4MT1Zf6XCz8ivi2REMzVJa5G0ys2+n3lUOzI9WH2iwM3HsI1nRzU2SWmPscfMvqB7Vz00PVd7oL3Lx7GPako3N0hnja/Fy76ifVpANT5WeZ26ycaxkWxMOThIZoqsw8m+o39cQjc+VXebuMfFspJvTzs5SGWIqcHIvaSCX0Q5P1R1mLbGxLKUcVE9Okhjhqe+xr2lhGFHOj9Uc5azxMSzlnNUQDtIYoSkvMW9poVkSTxAU3KUscLDs5d1VkI8SGGCorrEvaeHZks+QFNwka7AwrOYd1lEPUhggKC4wryniWhOP0FSb4+svsGzmnlbRj9IX36dtsG8qItrUEFCUm2NqrzAtJt7XUhASF58m7S/u6mMbVJDQ1Fsi6i6v7ScfV9KQUhdepmxvrupjm9URENRa4mluL6znX9iTENJXHmXr7y6qo9xVkZEUWmHo7e8s56BZE5ESVx3la27uaqQc1hIRVFohaG1u7OfgmZQRUpbdpOrubmqknVbSkZRZ4Sfs7qzn4RoUkdKW3SRqbe4q5N2XUtHUWaCnbG5s6CGalNIS1pzj6e2t6uUeF9NSFFlgJuvuLKhh2xVSktaco2ltLarlXpgT0lRZX+ZrbayoYhuV0tMWXGLo7O1q5Z8YlBKUWR9l6y1sqKKb1lMTFlviqKxtauXfWRSS1JjfJWqtLGii3FbTk1ZboigsLSrmH9mVExSYnqUqLOxo4xzXU9OWW2Hnq6zq5mAaFVOUmJ5kqaxsKONdF5RT1lshZyssquZgmpXT1JheJClsK+jjnZgUk9ZbIOaq7GrmoNrWVBTYXePo6+vpI94YlRQWWuCmamwqpuEbVpRU2F2jaGtrqSQeWRVUVlqgZeor6qbhm9cUlRgdIygrK6kkXtlVlJZaX+Wpq6qnIdwXVNUYHOKnqutpJJ8Z1hTWWl+lKWtqpyIcl9VVWByiZ2prKSTfWhZVFlofZKjrKmdiXNhVlVfcoebqKuklH9qW1VZaHyRoqupnYp1YldWX3GGmaerpJSAa1xWWmd7j6CpqJ2LdmRYV19whZimqqSVgW1dV1pneo6fqKidjHdlWVdfb4OXpKmkloJuX1daZnmNnqenno15ZltYX26ClaOoo5aDcGBYW2Z4i5ymp56NemhcWV9ugZSip6OXhHFhWVtmd4qbpaaejntpXVlfbYCSoKajl4VyY1pbZXaJmqSmno98a15aX21/kZ+mo5eGdGRbXGV1iJijpZ6QfWxfW19sfpCepaKYh3VlXFxldIaXoqSekH5tYFxgbH2OnaSimIh2Z11dZXOFlqGknpGAbmJcYGt8jZujopiJd2heXWVzhJSgo56RgXBjXWBre4yaoqGZinhpX15lcoOTn6KekoJxZF5ga3qLmaGhmYp5amBeZXKCkp6inpKCcmVfYWp5ipigoZmLe2thX2VxgZGcoZ6Tg3NmYGFqeImXn6CZjHxtYmBlcICQm6Cdk4R0Z2BhaniIlp6gmYx9bmNgZXB/j5qgnZOFdWhhYmp3h5Wdn5mNfm9kYWVwfo2Zn52UhnZpYmJpdoaTnZ+ZjX5wZWFlb32MmJ6dlIZ3amNiaXaFkpyemY5/cWZiZW99i5ednJSHeGxkY2l1hJGbnpmOgHJnY2VufIqWnZyUiHltZWNpdYOQmp2Zj4FzaGNlbnuJlZyclYh6bmVkaXSCj5mcmY+CdGlkZm56iJSbm5WJe29mZGl0gY6YnJmQg3VqZWZueoiTmpuVinxwZ2Vpc4CNl5uZkIN2a2VmbXmHkpqblYp9cGhlaXOAjJabmJCEd2xmZ215hpGZmpWLfnFpZmlyf4yVmpiQhXhtZ2dteIWRmJqVi35yamZpcn6LlZmYkYV5bmdnbXiEkJeZlYt/c2pnaXJ9ipSZmJGGeW9oaG13g4+XmZWMgHRrZ2pxfYmTmJeRhnpvaWhtd4OOlpiVjIF1bGhqcXyIkpeXkYd7cGpobXaCjZWYlY2Bdm1oanF8h5GXl5GHfHFqaW12gYyUl5WNgnduaWpxe4eQlpeRiHxya2ltdYCLlJeVjYN3bmpqcXqGkJaWkYh9c2xqbXWAi5OWlI2DeG9qa3B6hY+VlpGJfnRsam11f4qSlpSOhHlwa2tweoSOlJaRiX90bWptdH+JkZWUjoR6cWtrcHmEjZSVkYl/dW5rbXR+iJGVlI6FenFsa3B5g42TlZGKgHZua210fYiQlJSOhXtybGxweIKMkpSRioB3b2xtdH2Hj5STjoZ8c21scHiCi5KUkYqBd3BsbnN8ho+Tk46GfHNubHB4gYqRlJGLgXhwbW5zfIaOk5OOhn10bm1wd4GKkZORi4J5cW1uc3yFjZKTj4d9dW9tcHeAiZCTkYuCeXJubnN7hI2Sko+HfnVvbXB3f4iPkpGLg3pybm5ze4SMkZKPiH92cG5wdn+Ij5KRjIN6c29vc3qDi5GSj4h/d3FucHZ+h46SkYyEe3Rvb3N6g4uQkY+IgHdxb3B2foeNkZCMhHx0cG9zeoKKkJGPiIB4cm9wdn6GjZGQjIV8dXBvc3mCiY+Rj4mBeXJvcXZ9hYyQkIyFfXVxcHN5gYmOkI6JgXlzcHF1fYWMkJCMhX12cXBzeYGIjpCOiYJ6c3BxdXyEi4+QjIZ+dnFwc3iAiI2QjomCenRxcXV8hIuPj4yGfndycHN4gIeNj46Jgnt0cXF1fIOKjo+Mhn94cnFzeH+HjI+OioN7dXFxdXuDio6PjIZ/eHNxc3h/hoyPjoqDfHVycnV7gomOj4yHgHlzcXN4foaLjo6Kg3x2cnJ1e4KJjY6Mh4B5dHJzd36Fi46OioR9dnNydXqBiI2OjIeAenRyc3d+hYqOjYqEfXdzcnV6gYiMjoyHgXp1cnN3fYSKjY2KhH53c3J1eoGHjI6MiIF7dXNzd32Eio2NioV+eHRzdXqAh4uNjIiCe3Zzc3d9g4mNjYqFfnh0c3V6gIaLjYyIgnt2c3R3fIOJjI2KhX95dXN1eX+Gio2MiIJ8d3R0d3yCiIyNioV/eXVzdXl/hYqMjIiCfHd0dHd8goiLjIqGgHp1dHV5f4WKjIyIg313dHR3fIKHi4yKhoB6dnR1eX6EiYyLiIN9eHV0d3uBh4uMioaAe3Z0dXl+hImLi4iDfXh1dHd7gYaKjIqGgXt3dHV5foSIi4uIhH55dXV3e4GGiouKhoF7d3V1eX6DiIuLiIR+eXZ1d3uAhoqLioaBfHd1dXh9g4iLi4iEf3l2dXd7gIWJi4qHgXx4dXZ4fYOHiouJhH96dnV3e4CFiYuKh4J8eHZ2eH2Ch4qLiYR/end1d3p/hYmKioeCfXh2dnh9goeKiomFgHt3dnd6f4SIioqHgn15dnZ4fIKGiYqJhYB7d3Z3en+EiIqKh4J9eXZ2eHyBhomKiIWAe3h2d3p/g4eKiYeDfnl3dnh8gYWJioiFgHx4dnd6foOHiYmHg356d3Z4fIGFiIqIhYF8eHd3en6Dh4mJh4N+end3eHyAhYiJiIWBfHl3d3p+goeJiYeDf3p4d3h8gISIiYiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICCg4SDgX16d3Z4fYOKj5COh350bWpsdH+Ml5ybk4V1Z19eZnWImqapopJ9Z1hRVmZ9lqq0sqOKb1ZIR1Rti6i7wLadfVxEOkFYep68y8izkWpHMjBBY420z9fKqn5TMiMsSXWkzOHexJlmOh4aMFmNvd7o2LOBTykZIkJxpM7l4sicaTwfGy9Xirnb5ti0hFMtGyNBb6HL4uHJnmw/Ih0vVoe22OTXtodWMB4jQGydx9/gyaBvQyUeL1SEstTi17eJWTMgJD9qmsTd38mickYoIC9Tga/R4Na4jF03IiU/aJfA2t3KpHVKKyIwUX6szt7WuY5gOiUmPmaUvdfcyqZ4TS4kMFB8qMvb1bqRYz0nJz1kkbrV2sqne1AxJTBPeaXI2dS7k2ZAKik9Yo630tnKqX5TNCcxTXeixdfTu5VpQywqPWCLtM/XyqqAVjcpMUx0n8LV07yXbEYvKz1fibHN1smrg1k6KzJMcpy/09K9mW9JMS09XYauytTJrIVcPC0yS3CZvNDRvZpxTDQuPVyEq8fSya6HXz8vM0pul7nOz72cdE82Lz1agajF0MiviWJCMTRJbJS3zM69nnZSODE9WX+lws/Ir4tkRDM1SWuRtMrNvp95VDsyPVh9osDNx7CNZ0c1Nklpj7HHzL6ge1c9ND1Xe6C9y8exj2pKNzdIZ42vxcu+on1aQDU+VnmdusnGsZFsTDk4SGaKrMPJvqN/XEI3PlV3m7jHxbKSb087OUhliKnByL2kgl9EOT9UdZi2xsSylHFRPTpIY4anvsa9pYRhRzo/VHOWs8TEs5ZzVEA7SGKEpLzFvaaFZEk8QFNylLHCw7OXdVZCPEhhgqK6xL2nh2ZLPkBTcJGuwMKzmHdZRD1IYICguMK8p4loTj9BUm+PrL7Bs5p5W0Y/SF9+nbbBvKiLa1BBQlJtjaq8wLSbe11IQEhefJu0v7upjG1SQ0NRbIuour+0nH1fSkFIXXqZsb67qY5vVERDUWuJpbi+s51/YkxDSVx5l6+8uqqPcVZGRFFph6O3vLOegWRORElcd5Wtu7mqkHNYSEVRaIWhtbuzn4JmUEVKW3aTq7m5qpJ1W0pGUWeEn7O6s5+EaFJHSlt0kam3uKuTdl1LR1Fmgp2xubOghmpTSEtac4+ntrerlHhfTUhRZYCbr7iyoYdsVUpLWnKNpbS2q5V6YE9JUWV/ma22sqGIbldLTFlxi6OztauWfGJQSlFkfZestbKiim9ZTExZb4qisbWrl31kUktSY3yVqrSxootxW05NWW6IoLC0q5h/ZlRMUmJ6lKizsaOMc11PTllth56us6uZgGhVTlJieZKmsbCjjXReUU9ZbIWcrLKrmYJqV09SYXiQpbCvo452YFJPWWyDmquxq5qDa1lQU2F3j6Ovr6SPeGJUUFlrgpmpsKqbhG1aUVNhdo2hra6kkHlkVVFZaoGXqK+qm4ZvXFJUYHSMoKyupJF7ZVZSWWl/lqauqpyHcF1TVGBzip6rraSSfGdYU1lpfpSlraqciHJfVVVgcomdqaykk31oWVRZaH2So6ypnYlzYVZVX3KHm6irpJR/altVWWh8kaKrqZ2KdWJXVl9xhpmnq6SUgGtcVlpne4+gqaidi3ZkWFdfcIWYpqqklYFtXVdaZ3qOn6ionYx3ZVlXX2+Dl6SppJaCbl9XWmZ5jZ6np56NeWZbWF9ugpWjqKOWg3BgWFtmeIucpqeejXpoXFlfboGUoqejl4RxYVlbZneKm6Wmno57aV1ZX22AkqCmo5eFcmNaW2V2iZqkpp6PfGteWl9tf5GfpqOXhnRkW1xldYiYo6WekH1sX1tfbH6QnqWimId1ZVxcZXSGl6KknpB+bWBcYGx9jp2kopiIdmddXWVzhZahpJ6RgG5iXGBrfI2bo6KYiXdoXl1lc4SUoKOekYFwY11ga3uMmqKhmYp4aV9eZXKDk5+inpKCcWReYGt6i5mhoZmKeWpgXmVygpKeop6SgnJlX2FqeYqYoKGZi3trYV9lcYGRnKGek4NzZmBhaniJl5+gmYx8bWJgZXCAkJugnZOEdGdgYWp4iJaeoJmMfW5jYGVwf4+aoJ2ThXVoYWJqd4eVnZ+ZjX5vZGFlcH6NmZ+dlIZ2aWJiaXaGk52fmY1+cGVhZW99jJienZSGd2pjYml2hZKcnpmOf3FmYmVvfYuXnZyUh3hsZGNpdYSRm56ZjoByZ2NlbnyKlp2clIh5bWVjaXWDkJqdmY+Bc2hjZW57iZWcnJWIem5lZGl0go+ZnJmPgnRpZGZueoiUm5uViXtvZmRpdIGOmJyZkIN1amVmbnqIk5qblYp8cGdlaXOAjZebmZCDdmtlZm15h5Kam5WKfXBoZWlzgIyWm5iQhHdsZmdteYaRmZqVi35xaWZpcn+MlZqYkIV4bWdnbXiFkZialYt+cmpmaXJ+i5WZmJGFeW5nZ214hJCXmZWLf3NqZ2lyfYqUmZiRhnlvaGhtd4OPl5mVjIB0a2dqcX2Jk5iXkYZ6b2lobXeDjpaYlYyBdWxoanF8iJKXl5GHe3BqaG12go2VmJWNgXZtaGpxfIeRl5eRh3xxamltdoGMlJeVjYJ3bmlqcXuHkJaXkYh8cmtpbXWAi5SXlY2Dd25qanF6hpCWlpGIfXNsam11gIuTlpSNg3hvamtweoWPlZaRiX50bGptdX+KkpaUjoR5cGtrcHqEjpSWkYl/dG1qbXR/iZGVlI6EenFra3B5hI2UlZGJf3Vua210foiRlZSOhXpxbGtweYONk5WRioB2bmttdH2IkJSUjoV7cmxscHiCjJKUkYqAd29sbXR9h4+Uk46GfHNtbHB4gouSlJGKgXdwbG5zfIaPk5OOhnxzbmxweIGKkZSRi4F4cG1uc3yGjpOTjoZ9dG5tcHeBipGTkYuCeXFtbnN8hY2Sk4+HfXVvbXB3gImQk5GLgnlybm5ze4SNkpKPh351b21wd3+Ij5KRi4N6cm5uc3uEjJGSj4h/dnBucHZ/iI+SkYyDenNvb3N6g4uRko+If3dxbnB2foeOkpGMhHt0b29zeoOLkJGPiIB3cW9wdn6HjZGQjIR8dHBvc3qCipCRj4iAeHJvcHZ+ho2RkIyFfHVwb3N5gomPkY+JgXlyb3F2fYWMkJCMhX11cXBzeYGJjpCOiYF5c3BxdX2FjJCQjIV9dnFwc3mBiI6QjomCenNwcXV8hIuPkIyGfnZxcHN4gIiNkI6Jgnp0cXF1fISLj4+Mhn53cnBzeICHjY+OiYJ7dHFxdXyDio6PjIZ/eHJxc3h/h4yPjoqDe3VxcXV7g4qOj4yGf3hzcXN4f4aMj46Kg3x1cnJ1e4KJjo+Mh4B5c3FzeH6Gi46OioN8dnJydXuCiY2OjIeAeXRyc3d+hYuOjoqEfXZzcnV6gYiNjoyHgHp0cnN3foWKjo2KhH13c3J1eoGIjI6Mh4F6dXJzd32Eio2NioR+d3NydXqBh4yOjIiBe3Vzc3d9hIqNjYqFfnh0c3V6gIeLjYyIgnt2c3N3fYOJjY2KhX54dHN1eoCGi42MiIJ7dnN0d3yDiYyNioV/eXVzdXl/hoqNjIiCfHd0dHd8goiMjYqFf3l1c3V5f4WKjIyIgnx3dHR3fIKIi4yKhoB6dXR1eX+FioyMiIN9d3R0d3yCh4uMioaAenZ0dXl+hImMi4iDfXh1dHd7gYeLjIqGgHt2dHV5foSJi4uIg314dXR3e4GGioyKhoF7d3R1eX6EiIuLiIR+eXV1d3uBhoqLioaBe3d1dXl+g4iLi4iEfnl2dXd7gIaKi4qGgXx3dXV4fYOIi4uIhH95dnV3e4CFiYuKh4F8eHV2eH2Dh4qLiYR/enZ1d3uAhYmLioeCfHh2dnh9goeKi4mEf3p3dXd6f4WJioqHgn14dnZ4fYKHioqJhYB7d3Z3en+EiIqKh4J9eXZ2eHyChomKiYWAe3d2d3p/hIiKioeCfXl2dnh8gYaJioiFgHt4dnd6f4OHiomHg355d3Z4fIGFiYqIhYB8eHZ3en6Dh4mJh4N+end2eHyBhYiKiIWBfHh3d3p+g4eJiYeDfnp3d3h8gIWIiYiFgXx5d3d6foKHiYmHg396eHd4fICEiImIgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA';
+const SIL_URI='data:audio/wav;base64,UklGRmQfAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YUAfAACAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgA==';
 
-function beep(){
-  try{ navigator.vibrate&&navigator.vibrate([220,120,220]); }catch(e){}
-  if(!actx) return;
-  if(actx.state==='suspended') actx.resume();
-  [0,0.32].forEach(off=>{
-    const o=actx.createOscillator(), g=actx.createGain(), t=actx.currentTime+off;
+let actx=null, elBeep=null, elSil=null, primed=false, schedNodes=[], schedOk=false;
+
+function initAudioEls(){
+  if(elBeep) return;
+  elBeep=new Audio(BEEP_URI); elBeep.preload='auto'; elBeep.volume=1; elBeep.setAttribute('playsinline','');
+  elSil=new Audio(SIL_URI);  elSil.preload='auto';  elSil.loop=true; elSil.volume=0.001; elSil.setAttribute('playsinline','');
+}
+
+async function unlockAudio(){
+  initAudioEls();
+  const AC=window.AudioContext||window.webkitAudioContext;
+  if(AC && !actx){
+    try{
+      actx=new AC();
+      const b=actx.createBuffer(1,1,22050), s=actx.createBufferSource();
+      s.buffer=b; s.connect(actx.destination); s.start(0);
+    }catch(e){ actx=null; }
+  }
+  if(actx && actx.state!=='running'){ try{ await actx.resume(); }catch(e){} }
+  if(!primed){
+    try{
+      elBeep.muted=true;
+      await elBeep.play();
+      elBeep.pause(); elBeep.currentTime=0; elBeep.muted=false;
+      primed=true;
+    }catch(e){ elBeep.muted=false; }
+  }
+  updAudioBadge();
+}
+/* non {once:true}: ogni gesto e' un'occasione per risvegliare un contesto sospeso */
+['pointerdown','touchend'].forEach(ev=>
+  document.addEventListener(ev,()=>{unlockAudio();keepAwake();},{passive:true}));
+
+function updAudioBadge(){
+  const el=document.getElementById('aState'); if(!el) return;
+  const ctx = actx ? actx.state : 'n/d';
+  el.textContent='audio: '+(primed?'el\u2713':'el\u2717')+' \u00b7 ctx '+ctx;
+  el.style.color = (primed||ctx==='running') ? 'var(--t3)' : 'var(--acc)';
+}
+
+/* Beep immediato via elemento media (foreground) */
+function playBeepNow(){
+  try{ navigator.vibrate && navigator.vibrate([220,120,220]); }catch(e){}
+  if(!elBeep) return;
+  try{ elBeep.pause(); elBeep.currentTime=0; const p=elBeep.play(); if(p&&p.catch) p.catch(()=>{}); }catch(e){}
+}
+
+/* Beep pre-schedulato sul clock audio (background) */
+function scheduleBeep(msFromNow){
+  cancelSched();
+  schedOk=false;
+  if(!actx || actx.state!=='running') return;
+  const at=actx.currentTime + Math.max(0, msFromNow/1000);
+  [0,0.34].forEach(off=>{
+    const o=actx.createOscillator(), g=actx.createGain(), t=at+off;
     o.type='sine'; o.frequency.setValueAtTime(880,t);
     g.gain.setValueAtTime(0.0001,t);
-    g.gain.exponentialRampToValueAtTime(0.35,t+0.02);
+    g.gain.exponentialRampToValueAtTime(0.5,t+0.02);
     g.gain.exponentialRampToValueAtTime(0.0001,t+0.26);
     o.connect(g); g.connect(actx.destination); o.start(t); o.stop(t+0.28);
+    schedNodes.push(o);
   });
+  schedOk=true;
 }
+function cancelSched(){
+  schedNodes.forEach(o=>{ try{o.stop(0)}catch(e){} try{o.disconnect()}catch(e){} });
+  schedNodes=[];
+}
+function testBeep(){ unlockAudio().then(()=>playBeepNow()); }
 
 let wakeLock=null;
 async function keepAwake(){
@@ -453,14 +655,206 @@ async function keepAwake(){
   } }catch(e){}
 }
 
+/* ============================ RECUPERO: PRESET + OVERRIDE ============================ */
+const REC_PRESETS=[45,60,75,90,120,150,180,240];
+/* recOf(): l'override personale vince sul valore della scheda */
+function recOf(k,def){ const v=recs[k]; return (typeof v==='number'&&v>0)?v:def; }
+function setRecOverride(k,sec){
+  if(!k) return;
+  recs[k]=sec; save(K.recs,recs); render();
+}
+function clearRecOverride(k){
+  if(!k||recs[k]===undefined) return;
+  delete recs[k]; save(K.recs,recs); render();
+}
+function resetMaxes(){
+  if(!confirm('Cancellare tutti i massimali inseriti?')) return;
+  maxes={}; save(K.maxes,maxes); closeSheets(); render();
+}
+function resetAllRecs(){
+  if(!confirm('Reset di tutti i recuperi personalizzati?')) return;
+  recs={}; save(K.recs,recs); closeSheets(); render();
+}
+function fmtSec(s){ const m=Math.floor(s/60), r=s%60; return m? (r? m+'\u2032'+String(r).padStart(2,'0') : m+'\u2032') : s+'\u2033'; }
+
+/* ============================ NOTIFICHE DI SISTEMA ============================
+   Tre livelli, in ordine di affidabilita' decrescente:
+   1) Notification Triggers (TimestampTrigger): la notifica e' consegnata dal
+      sistema operativo, sopravvive alla chiusura dell'app. Non disponibile su
+      iOS e mai stabilizzata altrove: feature-detect, niente assunzioni.
+   2) setTimeout dentro il service worker: regge con app in background, ma se il
+      SW viene terminato (app chiusa davvero) il timeout muore con lui.
+   3) Nessuna delle due -> restano beep pre-schedulato e vibrazione.
+   Senza Web Push con un server non esiste un quarto livello. */
+function notifState(){ return ('Notification' in window) ? Notification.permission : 'unsupported'; }
+function hasTrigger(){ return ('Notification' in window) && ('showTrigger' in Notification.prototype) && ('TimestampTrigger' in window); }
+
+async function askNotif(){
+  if(!('Notification' in window)){ alert('Questo browser non supporta le notifiche.'); return; }
+  if(Notification.permission==='denied'){
+    alert('Notifiche bloccate. Vanno riattivate dalle impostazioni del browser per questo sito.');
+    return;
+  }
+  if(Notification.permission==='default'){ try{ await Notification.requestPermission(); }catch(e){} }
+  updNotifUI();
+}
+function updNotifUI(){
+  const b=document.getElementById('ntBtn'), h=document.getElementById('ntHint');
+  const st=notifState();
+  const lbl={granted:'Notifiche attive \u2713',denied:'Notifiche bloccate',default:'Attiva notifiche',unsupported:'Notifiche non supportate'};
+  if(b) b.textContent=lbl[st]||'Notifiche';
+  if(h) h.textContent = st==='granted'
+    ? (hasTrigger()?'Consegna via sistema operativo: arriva anche ad app chiusa.'
+                   :'Arriva con app in background. Ad app completamente chiusa non e\u2019 garantita.')
+    : (st==='denied'?'Riattivabili solo dalle impostazioni del browser.':'');
+  const link=document.getElementById('ntLink');
+  if(link) link.style.display = (st==='default') ? '' : 'none';
+}
+
+async function swReg(){
+  if(!('serviceWorker' in navigator)) return null;
+  try{ return await navigator.serviceWorker.ready; }catch(e){ return null; }
+}
+let trigScheduled=false;
+async function schedNotif(atMs,title,body){
+  cancelNotif();
+  if(notifState()!=='granted') return;
+  const reg=await swReg(); if(!reg) return;
+  const opts={body,tag:'ironlog-rest',renotify:true,icon:'./icon-192.png',badge:'./icon-192.png',
+              vibrate:[220,120,220],data:{kind:'rest'}};
+  if(hasTrigger()){
+    try{
+      await reg.showNotification(title,Object.assign({},opts,{showTrigger:new TimestampTrigger(atMs)}));
+      trigScheduled=true; return;
+    }catch(e){ /* cade sul service worker */ }
+  }
+  if(reg.active) reg.active.postMessage({type:'REST_END',at:atMs,title,body,opts});
+}
+function cancelNotif(){
+  if(!('serviceWorker' in navigator)) return;
+  navigator.serviceWorker.ready.then(reg=>{
+    if(reg.active) reg.active.postMessage({type:'REST_CANCEL'});
+    if(trigScheduled){
+      trigScheduled=false;
+      reg.getNotifications({tag:'ironlog-rest',includeTriggered:true})
+         .then(ns=>ns.forEach(n=>n.close())).catch(()=>{});
+    }
+    reg.getNotifications({tag:'ironlog-rest'}).then(ns=>ns.forEach(n=>n.close())).catch(()=>{});
+  }).catch(()=>{});
+}
+/* etichette pulite per la notifica: senza il suffisso RECUPERO gia' implicito */
+function notifTexts(){
+  const lab=(document.getElementById('tLabel').textContent||'').replace(/\s*\u2022\s*RECUPERO$/,'');
+  const nx=document.getElementById('tNext').textContent||'';
+  return {title:'Recupero finito'+(lab?' \u2014 '+lab:''), body:nx||'Vai con la prossima serie.'};
+}
+function armNotif(){
+  if(!tEnd) return;
+  const t=notifTexts();
+  schedNotif(tEnd,t.title,t.body);
+}
+
 /* ============================ TIMER (timestamp-based) ============================ */
-let tInt=null,tEnd=0,tTotal=0,fired=false,lastLogIds=[];
-function start(sec,label,nextTxt){
+let tInt=null,tEnd=0,tTotal=0,fired=false;
+let tKey=null,tDefRec=0;
+
+/* Il timer sopravvive allo scaricamento della pagina: iOS libera RAM in
+   background e senza questo il recupero sparisce mentre la serie e' gia' a log. */
+function persistT(){
+  save(K.timer,{tEnd,tTotal,tKey,tDefRec,
+    label:document.getElementById('tLabel').textContent,
+    next:document.getElementById('tNext').textContent});
+}
+function clearPersistT(){ try{ localStorage.removeItem(K.timer); }catch(e){} }
+function restoreTimer(){
+  const t=load(K.timer,null);
+  if(!t||!t.tEnd) return;
+  if(t.tEnd<=Date.now()){ clearPersistT(); return; }   /* scaduto: niente beep tardivo */
+  tEnd=t.tEnd; tTotal=t.tTotal||Math.round((t.tEnd-Date.now())/1000);
+  tKey=t.tKey||null; tDefRec=t.tDefRec||0; fired=false;
+  document.getElementById('tLabel').textContent=t.label||'RECUPERO';
+  document.getElementById('tNext').textContent=t.next||'';
+  openSheet('timer'); keepAwake();
+  tick(); renderRecRow(); armNotif();
+  clearInterval(tInt); tInt=setInterval(tick,250);
+  /* l'audio non e' ancora sbloccato: serve un gesto, ci pensa il listener pointerdown */
+}
+
+/* ---- AUTOCHIUSURA A FINE RECUPERO ----
+   Il ritardo serve a far vedere 00:00 e sentire il beep prima che il foglio
+   scenda. A 0 la chiusura e' immediata; a -1 resta aperto come prima. */
+const AUTO_CLOSE_MS = 1500;
+let closeTO=null;
+function cancelAutoClose(){ if(closeTO){ clearTimeout(closeTO); closeTO=null; } }
+function scheduleAutoClose(){
+  cancelAutoClose();
+  if(AUTO_CLOSE_MS<0) return;
+  closeTO=setTimeout(()=>{
+    closeTO=null;
+    /* non chiudere se nel frattempo e' ripartito un timer o si e' aperto un altro foglio */
+    if(!fired||tInt) return;
+    const sh=document.getElementById('timer');
+    if(sh&&sh.classList.contains('open')) stopT();
+  }, AUTO_CLOSE_MS);
+}
+
+function renderRecRow(){
+  const row=document.getElementById('recRow'); if(!row) return;
+  const cur=tTotal;
+  row.querySelectorAll('.chip').forEach(c=>{
+    c.classList.toggle('on', Number(c.dataset.sec)===cur);
+  });
+  const rst=document.getElementById('recReset');
+  if(rst) rst.style.display = (tKey && recs[tKey]!==undefined) ? '' : 'none';
+  const def=document.getElementById('recDef');
+  if(def) def.textContent = tDefRec ? ('scheda '+fmtSec(tDefRec)) : '';
+}
+
+/* Cambia la durata del recupero in corso e la memorizza per l'esercizio */
+function setRest(sec,persist){
+  cancelAutoClose();
+  sec=Math.max(5,Math.round(sec));
+  tTotal=sec; tEnd=Date.now()+sec*1000; fired=false;
+  if(persist!==false) setRecOverride(tKey,sec);
+  cancelSched();
+  unlockAudio().then(()=>{ scheduleBeep(tEnd-Date.now()); updAudioBadge(); });
+  clearInterval(tInt); tInt=setInterval(tick,250);
+  tick(); renderRecRow(); persistT(); armNotif();
+}
+let rsKey=null, rsDef=0;
+function openRecEdit(k,def){
+  rsKey=k; rsDef=def;
+  document.getElementById('rsTitle').textContent='RECUPERO \u2022 '+(EX[k]||k).toUpperCase();
+  paintRs(); openSheet('recsheet');
+}
+function paintRs(){
+  const cur=recOf(rsKey,rsDef);
+  document.querySelectorAll('#rsRow .chip').forEach(c=>c.classList.toggle('on',Number(c.dataset.sec)===cur));
+  document.getElementById('rsHint').textContent =
+    (recs[rsKey]!==undefined ? 'Personalizzato \u2022 ' : 'Da scheda \u2022 ') + 'default '+fmtSec(rsDef);
+}
+function pickRec(sec){ setRecOverride(rsKey,sec); paintRs(); }
+function pickRecDefault(){ clearRecOverride(rsKey); paintRs(); }
+
+function useDefaultRest(){
+  clearRecOverride(tKey);
+  setRest(tDefRec||90,false);
+}
+
+function start(sec,label,nextTxt,key){
+  tKey=key||null; tDefRec=sec;
+  sec=recOf(tKey,sec);
   tTotal=sec; tEnd=Date.now()+sec*1000; fired=false;
   document.getElementById('tLabel').textContent=label.toUpperCase()+' \u2022 RECUPERO';
   document.getElementById('tNext').textContent=nextTxt;
-  document.querySelectorAll('#rpeRow .chip').forEach(c=>c.classList.remove('on'));
-  openSheet('timer'); keepAwake(); tick();
+  openSheet('timer'); keepAwake();
+  unlockAudio().then(()=>{
+    scheduleBeep(sec*1000);
+    if(elSil){ try{ const p=elSil.play(); if(p&&p.catch) p.catch(()=>{}); }catch(e){} }
+    updAudioBadge();
+  });
+  cancelAutoClose();
+  tick(); renderRecRow(); persistT(); armNotif();
   clearInterval(tInt); tInt=setInterval(tick,250);
 }
 function tick(){
@@ -468,24 +862,44 @@ function tick(){
   const m=Math.floor(left/60),s=left%60;
   document.getElementById('tTime').textContent=String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');
   document.getElementById('tBar').style.width=(tTotal?left/tTotal*100:0)+'%';
-  if(left<=0&&!fired){ fired=true; beep(); clearInterval(tInt); tInt=null; }
+  if(left<=0&&!fired){
+    fired=true;
+    const lateMs = Date.now()-tEnd;
+    /* se il tick e' puntuale annullo il nodo schedulato e uso l'elemento media;
+       se e' in ritardo (tab throttlata) il beep schedulato ha gia' suonato: non raddoppio */
+    if(lateMs < 1500){ cancelSched(); playBeepNow(); }
+    else { cancelSched(); if(!schedOk) playBeepNow(); }
+    clearInterval(tInt); tInt=null;
+    clearPersistT();
+    if(document.visibilityState==='visible') cancelNotif();
+    scheduleAutoClose();
+  }
 }
 function addTime(s){
   if(!tInt&&fired) tEnd=Date.now();
-  tEnd+=s*1000; tTotal+=s; fired=false;
+  /* non scendere sotto ~5s residui quando si toglie tempo */
+  if(s<0 && (tEnd-Date.now())+s*1000 < 5000) s = -Math.max(0,Math.floor(((tEnd-Date.now())-5000)/1000));
+  tEnd+=s*1000; tTotal=Math.max(5,tTotal+s); fired=false;
+  cancelSched(); scheduleBeep(tEnd-Date.now());
+  cancelAutoClose();
   if(!tInt) tInt=setInterval(tick,250);
-  tick();
+  tick(); renderRecRow(); persistT(); armNotif();
 }
-function stopT(){ clearInterval(tInt); tInt=null; closeSheets(); }
+function stopT(){
+  clearInterval(tInt); tInt=null;
+  cancelSched(); cancelAutoClose(); clearPersistT(); cancelNotif();
+  if(elSil){ try{ elSil.pause(); elSil.currentTime=0; }catch(e){} }
+  closeSheets();
+}
 document.addEventListener('visibilitychange',()=>{
-  if(document.visibilityState==='visible'){ keepAwake(); if(tInt) tick(); }
+  if(document.visibilityState==='visible'){
+    keepAwake();
+    if(actx&&actx.state!=='running'){ actx.resume().then(()=>{ if(tInt&&!fired) scheduleBeep(tEnd-Date.now()); updAudioBadge(); }).catch(()=>{}); }
+    if(tInt) tick();
+    updAudioBadge();
+  }
 });
-function setRpe(v){
-  document.querySelectorAll('#rpeRow .chip').forEach(c=>c.classList.toggle('on',c.textContent==String(v)));
-  if(!lastLogIds.length) return;
-  log.forEach(e=>{ if(lastLogIds.indexOf(e.id)>-1) e.rpe=v; });
-  save(K.log,log); render();
-}
+
 
 /* ============================ SHEETS ============================ */
 function openSheet(id){
@@ -494,7 +908,7 @@ function openSheet(id){
   if(id!=='timer') document.getElementById('backdrop').classList.add('open');
 }
 function closeSheets(keepTimer){
-  ['timer','wsheet','hsheet','msheet'].forEach(id=>{
+  ['timer','wsheet','hsheet','msheet','recsheet','maxsheet','sumsheet'].forEach(id=>{
     if(keepTimer&&id==='timer') return;
     document.getElementById(id).classList.remove('open');
   });
@@ -538,14 +952,15 @@ function resetAllW(){ if(confirm('Reset di tutti i pesi custom?')){ custom={}; s
 /* ============================ LOG SERIE ============================ */
 function logSet(ex,i,w){
   const id=Date.now()+'-'+Math.random().toString(36).slice(2,7);
-  log.push({id,ts:Date.now(),day:DAY,week:W,ex:ex.k,set:i+1,
-            reps:repsAt(ex.s[W],i), kg:kgAt(w,ex.s[W],i), bw:!!w.bw, note:w.note||null, rpe:null});
+  log.push({id,ts:Date.now(),date:SD(),day:DAY,week:W,ex:ex.k,set:i+1,
+            reps:repsAt(ex.s[W],i), kg:kgAt(w,ex.s[W],i), bw:!!w.bw, note:w.note||null});
   return id;
 }
 function unlogSet(exKey,i){
   for(let j=log.length-1;j>=0;j--){
     const e=log[j];
-    if(e.ex===exKey&&e.set===i+1&&e.day===DAY&&e.week===W){ log.splice(j,1); return; }
+    /* il match sulla data evita di cancellare la stessa serie di una sessione precedente */
+    if(e.ex===exKey&&e.set===i+1&&e.day===DAY&&e.week===W&&(e.date===undefined||e.date===SD())){ log.splice(j,1); return; }
   }
 }
 /* Epley: 1RM = kg * (1 + reps/30) */
@@ -554,6 +969,209 @@ function bestE1RM(exKey){
   let best=null;
   log.forEach(e=>{ if(e.ex===exKey&&e.kg){ const v=e1rm(e.kg,e.reps); if(v&&(!best||v>best)) best=v; } });
   return best;
+}
+
+/* ============================ MASSIMALI + RISCALDAMENTO ============================ */
+/* Il "big lift" di un giorno e' per costruzione il primo esercizio del primo gruppo:
+   nella scheda ogni giornata apre con il multiarticolare pesante. */
+function bigLift(day){ const g=D[day]&&D[day].groups[0]; return g?g.exs[0]:null; }
+const BIG_DAYS = Object.keys(D).filter(d=>bigLift(d));
+
+/* peso piu' alto previsto nella settimana corrente per quell'esercizio */
+function topKg(ex){
+  const w=weightOf(DAY,ex);
+  if(!w||w.bw||!w.kg||!w.kg.length) return null;
+  return Math.max.apply(null,w.kg.filter(x=>typeof x==='number'));
+}
+function topKgFor(day,ex){
+  const c=custom[`${day}|${W}|${ex.k}`], w=(c!==undefined?c:(ex.w[W]||{}));
+  if(!w||w.bw||!w.kg||!w.kg.length) return null;
+  return Math.max.apply(null,w.kg.filter(x=>typeof x==='number'));
+}
+
+const round25 = v => Math.round(v/2.5)*2.5;
+
+/* Rampe: [frazione del peso di riferimento, ripetizioni] */
+const WU_RAMPS={
+  short:[[0.50,5],[0.75,3],[0.90,1]],
+  std:  [[0.40,5],[0.60,4],[0.75,3],[0.88,2]],
+  long: [[0.30,8],[0.50,5],[0.65,4],[0.78,3],[0.88,2],[0.95,1]]
+};
+const WU_LABEL={short:'Breve',std:'Standard',long:'Lunga'};
+
+/* base 'work' = frazioni del peso di lavoro del giorno (sempre disponibile).
+   base 'max'  = frazioni del massimale: rampa piu' lunga se lavori lontano dall'1RM.
+   In entrambi i casi le serie sopra il peso di lavoro vengono scartate. */
+function wuSets(day,ex){
+  const work=topKgFor(day,ex);
+  if(!work) return [];
+  const m=(cfg.wuBase==='max') ? effMax(ex.k) : null;
+  const ref=(m&&m>work)?m:work;
+  const bar=cfg.bar||20;
+  const out=[];
+  if(work>bar*1.8) out.push({kg:bar,reps:8,bar:true});
+  WU_RAMPS[cfg.wuRamp||'std'].forEach(([f,r])=>{
+    const k=round25(ref*f);
+    if(k>bar && k<work) out.push({kg:k,reps:r,pct:Math.round(k/work*100)});
+  });
+  /* dopo l'arrotondamento due gradini possono coincidere: tengo il primo */
+  return out.filter((o,i)=>i===0||o.kg!==out[i-1].kg);
+}
+
+function maxOf(k){ const v=maxes[k]; return (typeof v==='number'&&v>0)?v:null; }
+/* massimale effettivo: dichiarato se c'e', altrimenti stimato dal log */
+function effMax(k){ return maxOf(k) || bestE1RM(k) || null; }
+
+function setMax(k,val){
+  const v=parseFloat(String(val).replace(',','.'));
+  if(!val || isNaN(v) || v<=0) delete maxes[k]; else maxes[k]=v;
+  save(K.maxes,maxes); renderMax(); render();
+}
+function setWuRamp(r){ cfg.wuRamp=r; save(K.cfg,cfg); renderMax(); render(); }
+function setWuBase(b){ cfg.wuBase=b; save(K.cfg,cfg); renderMax(); render(); }
+
+function openMax(){ renderMax(); openSheet('maxsheet'); }
+
+function renderMax(){
+  const rows=BIG_DAYS.map(d=>{
+    const ex=bigLift(d), k=ex.k;
+    const work=topKgFor(d,ex), dec=maxOf(k), est=bestE1RM(k), m=effMax(k);
+    const pc = (work&&m) ? Math.round(work/m*100) : null;
+    return `<tr>
+      <td><b>${EX[k]}</b><div class="hmeta">${d} &bull; ${D[d].focus}</div></td>
+      <td><input type="number" inputmode="decimal" step="2.5" min="0" value="${dec!=null?dec:''}"
+           placeholder="${est?Math.round(est*2)/2:'kg'}" onchange="setMax('${k}',this.value)"></td>
+      <td class="hmeta">${est?num(Math.round(est*2)/2):'&mdash;'}</td>
+      <td>${work!=null?num(work):'&mdash;'}</td>
+      <td class="pc">${pc!=null?pc+'%':'&mdash;'}</td>
+    </tr>`;
+  }).join('');
+  document.getElementById('mxBody').innerHTML=
+    `<table class="mx"><thead><tr>
+       <th>ESERCIZIO</th><th>1RM</th><th>e1RM</th><th>LAVORO ${WLABEL[W]}</th><th>%1RM</th>
+     </tr></thead><tbody>${rows}</tbody></table>`;
+
+  document.querySelectorAll('#wuRampRow .chip').forEach(c=>c.classList.toggle('on',c.dataset.r===cfg.wuRamp));
+  document.querySelectorAll('#wuBaseRow .chip').forEach(c=>c.classList.toggle('on',c.dataset.b===cfg.wuBase));
+
+  const ex=bigLift(DAY);
+  const prev=ex?wuSets(DAY,ex):[];
+  document.getElementById('wuHint').textContent = ex
+    ? `${EX[ex.k]} (${DAY}, ${WLABEL[W]}): ${prev.length?prev.map(o=>num(o.kg)+'\u00d7'+o.reps).join('  \u2192  '):'nessuna serie di avvicinamento'}`
+    : '';
+}
+
+/* ============================ SOMMARIO SESSIONE ============================ */
+/* Le reps sono stringhe libere nella scheda: "8", "3x3", "8-10/gamba", "12-15".
+   Per il tonnellaggio conta il numero effettivo di ripetizioni:
+   - range "8-10"  -> estremo basso (stima prudente, non gonfia il totale)
+   - "/gamba"      -> x2, perche' il set e' unilaterale ma il lavoro e' doppio */
+function repsNum(r){
+  if(r==null) return 0;
+  const t=String(r).toLowerCase();
+  const m=t.match(/(\d+)/);
+  if(!m) return 0;
+  let n=parseInt(m[1],10);
+  if(/gamba|lato|braccio/.test(t)) n*=2;
+  return n;
+}
+
+/* una sessione = tutte le righe di log con stessa data + stesso giorno */
+function sessionRows(date,day){ return log.filter(e=>e.date===date&&e.day===day); }
+function sessionStats(rows){
+  let ton=0,sets=0,bwSets=0,reps=0,week=null;
+  const perEx={};
+  rows.forEach(e=>{
+    sets++;
+    if(week===null) week=e.week;
+    const r=repsNum(e.reps);
+    reps+=r;
+    if(e.kg){ const v=e.kg*r; ton+=v; perEx[e.ex]=(perEx[e.ex]||0)+v; }
+    else if(e.bw) bwSets++;
+  });
+  return {ton,sets,bwSets,reps,week,perEx};
+}
+/* sessioni precedenti dello stesso giorno, dalla piu' recente */
+function prevSessions(day,excludeDate){
+  const ds=[...new Set(log.filter(e=>e.day===day&&e.date&&e.date!==excludeDate).map(e=>e.date))];
+  return ds.sort().reverse();
+}
+
+function delta(cur,prev,unit,digits){
+  if(prev==null||!prev) return '<div class="sm-d eq">nessun confronto</div>';
+  const d=cur-prev, pc=Math.round(d/prev*100);
+  const cls=Math.abs(pc)<1?'eq':(d>0?'up':'dn');
+  const sign=d>0?'+':'';
+  const val=digits!=null?num(Math.round(d*Math.pow(10,digits))/Math.pow(10,digits)):num(Math.round(d));
+  return `<div class="sm-d ${cls}">${sign}${val}${unit||''} \u00b7 ${sign}${pc}%</div>`;
+}
+
+function buildSummary(date,day){
+  const rows=sessionRows(date,day);
+  const cur=sessionStats(rows);
+  const pd=prevSessions(day,date)[0]||null;
+  const prev=pd?sessionStats(sessionRows(pd,day)):null;
+
+  document.getElementById('smTitle').textContent =
+    (rows.length?'SESSIONE \u2022 ':'NESSUN DATO \u2022 ')+day+' '+(cur.week?WLABEL[cur.week]:WLABEL[W]);
+
+  if(!rows.length){
+    document.getElementById('smBody').innerHTML=
+      '<p class="hmeta">Nessuna serie registrata per questa sessione.</p>';
+    return;
+  }
+
+  const tonTxt = cur.ton>=1000 ? num(Math.round(cur.ton/10)/100)+'<span class="u">t</span>'
+                               : num(Math.round(cur.ton))+'<span class="u">kg</span>';
+  const cards=`<div class="sm-grid">
+    <div class="sm-c"><div class="sm-l">TONNELLAGGIO</div><div class="sm-v">${tonTxt}</div>
+      ${delta(cur.ton,prev?prev.ton:null,' kg')}</div>
+    <div class="sm-c"><div class="sm-l">SERIE</div><div class="sm-v">${cur.sets}</div>
+      ${prev?delta(cur.sets,prev.sets,''):'<div class="sm-d eq">nessun confronto</div>'}</div>
+    <div class="sm-c"><div class="sm-l">RIPETIZIONI</div>
+      <div class="sm-v">${cur.reps}</div>
+      ${prev?delta(cur.reps,prev.reps,''):'<div class="sm-d eq">nessun confronto</div>'}</div>
+    <div class="sm-c"><div class="sm-l">CARICO MEDIO/SERIE</div>
+      <div class="sm-v">${num(Math.round(cur.ton/Math.max(1,cur.sets-cur.bwSets)))}<span class="u">kg</span></div>
+      <div class="sm-d eq">${cur.bwSets?cur.bwSets+' serie a corpo libero escluse':'tutte a carico'}</div></div>
+  </div>`;
+
+  const ref = prev
+    ? `<p class="hmeta" style="margin-top:10px">Confronto con <b>${pd}</b> (${day} ${WLABEL[prev.week]||''}) \u2014 ${prev.sets} serie, ${num(Math.round(prev.ton))} kg.</p>`
+    : `<p class="hmeta" style="margin-top:10px">Prima sessione registrata per ${day}: nessun termine di paragone.</p>`;
+
+  const keys=Object.keys(cur.perEx).sort((a,b)=>cur.perEx[b]-cur.perEx[a]);
+  const breakdown=keys.length?`<p class="h2">TONNELLAGGIO PER ESERCIZIO</p>`+keys.map(k=>{
+    const pv=prev&&prev.perEx[k];
+    const d=pv?(cur.perEx[k]-pv):null;
+    const tag=d==null?'':` <span class="sm-d ${Math.abs(d)<1?'eq':(d>0?'up':'dn')}" style="display:inline">${d>0?'+':''}${num(Math.round(d))}</span>`;
+    return `<div class="sm-row"><span>${EX[k]||k}</span><span><b>${num(Math.round(cur.perEx[k]))}</b> kg${tag}</span></div>`;
+  }).join(''):'';
+
+  document.getElementById('smBody').innerHTML=cards+ref+breakdown;
+}
+
+function openSummary(){ buildSummary(SD(),DAY); openSheet('sumsheet'); }
+
+/* tutte le serie di lavoro del giorno spuntate? (il riscaldamento non conta) */
+function dayComplete(){
+  const d=D[DAY];
+  return d.groups.every(gr=>gr.exs.every(ex=>{
+    const n=exSets(ex);
+    for(let i=0;i<n;i++) if(!done[dk(DAY,ex.k,i)]) return false;
+    return true;
+  }));
+}
+/* il flag vive dentro `done`, quindi "Azzera serie di oggi" lo ripulisce insieme
+   al resto e il sommario puo' ricomparire se rifai la sessione */
+const SUMK=()=>`${SD()}|${DAY}|${W}|__sum`;
+function maybeSummary(){
+  if(done[SUMK()]) return;
+  if(!dayComplete()) return;
+  done[SUMK()]=true; save(K.done,done);
+  /* l'ultima serie non ha un recupero da rispettare: chiudo il timer, altrimenti
+     i due fogli si sovrappongono sul fondo schermo */
+  setTimeout(()=>{ stopT(); buildSummary(SD(),DAY); openSheet('sumsheet'); }, 700);
 }
 
 /* ============================ RENDER ============================ */
@@ -573,7 +1191,23 @@ function render(){
   }));
   document.getElementById('gProgress').textContent=(tot?Math.round(dn/tot*100):0)+'%';
 
-  document.getElementById('list').innerHTML=d.groups.map((gr,gi)=>{
+  const bl=bigLift(DAY), wu=bl?wuSets(DAY,bl):[];
+  const wuHtml = wu.length ? `<div class="wu">
+    <div class="wu-top">
+      <span class="wu-t">RISCALDAMENTO &bull; ${EX[bl.k]}</span>
+      <span class="wu-s">${WU_LABEL[cfg.wuRamp]} &bull; <button class="wu-s" style="text-decoration:underline" onclick="openMax()">modifica</button></span>
+    </div>
+    ${wu.map((o,i)=>{
+      const on=!!done[dk(DAY,'wu|'+bl.k,i)];
+      return `<div class="wu-row">
+        <button class="set ${on?'on':''}" onclick="toggleWu(${i})" aria-label="Serie riscaldamento ${i+1}">${on?'\u2713':i+1}</button>
+        <span class="wu-k">${num(o.kg)} <span class="ex-u">kg</span></span>
+        <span class="wu-r">${o.bar?'bilanciere scarico':'~'+o.pct+'%'} &bull; ${o.reps} rip</span>
+      </div>`;
+    }).join('')}
+  </div>` : '';
+
+  document.getElementById('list').innerHTML= wuHtml + d.groups.map((gr,gi)=>{
     const n=grpSets(gr), sup=gr.sup;
     let gd=0;
     for(let i=0;i<n;i++){
@@ -604,32 +1238,47 @@ function render(){
       return `<button class="set ${on?'on':''}" onclick="toggle(${gi},${i})" aria-label="Serie ${i+1} di ${n}">${on?'\u2713':i+1}</button>`;
     }).join('');
 
-    const rec=gr.exs[0].rec;
+    const rk=gr.exs[0].k, recDef=gr.exs[0].rec, rec=recOf(rk,recDef), recCust=recs[rk]!==undefined;
     return `<div class="grp ${sup?'sup':''}">
       <div class="grp-top">${sup?'<span class="badge">SUPER SET</span>':'<span></span>'}
         <span class="count ${gd===n?'done':''}">${gd}/${n}</span></div>
       <div class="exs ${sup?'sup':''}">${blocks}</div>
       <div class="prog"><i style="width:${pct}%"></i></div>
-      <div class="sets">${btns}<span class="rec">${Math.floor(rec/60)}:${String(rec%60).padStart(2,'0')} rec</span></div>
+      <div class="sets">${btns}<button class="rec" onclick="openRecEdit('${rk}',${recDef})" aria-label="Modifica recupero">${Math.floor(rec/60)}:${String(rec%60).padStart(2,'0')} rec${recCust?' \u00b7 custom':''}</button></div>
     </div>`;
   }).join('');
+}
+
+/* Il riscaldamento non entra nel conteggio delle serie: non e' lavoro allenante.
+   Timer breve e nessun log. */
+function toggleWu(i){
+  const bl=bigLift(DAY); if(!bl) return;
+  const key=dk(DAY,'wu|'+bl.k,i);
+  const wu=wuSets(DAY,bl), o=wu[i];
+  if(done[key]) delete done[key]; else done[key]=true;
+  save(K.done,done); render();
+  if(done[key] && i<wu.length-1){
+    start(recOf('wu|'+bl.k,60), EX[bl.k]+' \u00b7 warm-up',
+          `Prossima: ${num(wu[i+1].kg)} kg \u00d7 ${wu[i+1].reps}`, 'wu|'+bl.k);
+  }
 }
 
 function toggle(gi,i){
   const gr=D[DAY].groups[gi];
   const act=gr.exs.filter(ex=>i<exSets(ex));
   const marking=act.some(ex=>!done[dk(DAY,ex.k,i)]);
-  lastLogIds=[];
   act.forEach(ex=>{
     const key=dk(DAY,ex.k,i);
-    if(marking){ if(!done[key]){ done[key]=true; lastLogIds.push(logSet(ex,i,weightOf(DAY,ex))); } }
+    if(marking){ if(!done[key]){ done[key]=true; logSet(ex,i,weightOf(DAY,ex)); } }
     else { delete done[key]; unlogSet(ex.k,i); }
   });
   save(K.done,done); save(K.log,log); render();
   if(marking){
     const n=grpSets(gr);
     start(gr.exs[0].rec, act.map(e=>EX[e.k]).join(' + '),
-          i+1>=n?'Esercizio completato':`Prossima: ${i+2}/${n}`);
+          i+1>=n?'Esercizio completato':`Prossima: ${i+2}/${n}`,
+          gr.exs[0].k);
+    maybeSummary();
   }
 }
 
@@ -637,7 +1286,8 @@ function setDay(d){ DAY=d; save(K.day,d); render(); }
 function setW(w){ W=w; save(K.week,w); render(); }
 function resetDay(){
   if(!confirm(`Azzerare le serie di ${DAY} ${WLABEL[W]}? Lo storico resta.`)) return;
-  Object.keys(done).forEach(k=>{ if(k.indexOf(`${DAY}|${W}|`)===0) delete done[k]; });
+  const pfx=`${SD()}|${DAY}|${W}|`;
+  Object.keys(done).forEach(k=>{ if(k.indexOf(pfx)===0) delete done[k]; });
   save(K.done,done); closeSheets(); render();
 }
 
@@ -651,7 +1301,7 @@ function openHistory(){
     const rows=byEx[k].slice(-8).reverse().map(e=>{
       const dt=new Date(e.ts).toLocaleDateString('it-IT',{day:'2-digit',month:'2-digit'});
       const loadTxt=e.kg!=null?num(e.kg)+' kg':(e.bw?'BW':(e.note||'\u2014'));
-      return `<div class="hitem"><span><b>${loadTxt}</b> \u00D7 ${e.reps}${e.rpe?` @RPE ${e.rpe}`:''}</span>
+      return `<div class="hitem"><span><b>${loadTxt}</b> \u00D7 ${e.reps}</span>
         <span class="hmeta">${dt} \u2022 ${e.week} \u2022 s${e.set}</span></div>`;
     }).join('');
     const b=bestE1RM(k);
@@ -662,7 +1312,7 @@ function openHistory(){
 function openMenu(){ openSheet('msheet'); }
 
 function exportJSON(){
-  const data={app:'ironlog',version:VER,exported:new Date().toISOString(),done,custom,log};
+  const data={app:'ironlog',version:VER,exported:new Date().toISOString(),done,custom,log,recs,maxes,cfg};
   const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
   const url=URL.createObjectURL(blob);
   const a=document.createElement('a');
@@ -680,8 +1330,10 @@ document.getElementById('fileIn').addEventListener('change',ev=>{
     try{
       const d=JSON.parse(r.result);
       if(!confirm('Sovrascrivere i dati locali con il backup?')) return;
-      done=d.done||{}; custom=d.custom||{}; log=d.log||[];
-      save(K.done,done); save(K.custom,custom); save(K.log,log);
+      done=d.done||{}; custom=d.custom||{}; log=d.log||[]; recs=d.recs||{};
+      maxes=d.maxes||{}; cfg=Object.assign({wuRamp:'std',wuBase:'work',bar:20},d.cfg||{});
+      save(K.done,done); save(K.custom,custom); save(K.log,log); save(K.recs,recs);
+      save(K.maxes,maxes); save(K.cfg,cfg);
       closeSheets(); render();
     }catch(e){ alert('File non valido.'); }
   };
@@ -725,8 +1377,12 @@ function checkBackup(){
   if((Date.now()-last)/864e5 > 14) document.getElementById('bkToast').classList.add('show');
 }
 
+pruneDone();
 render();
 checkBackup();
+updAudioBadge();
+updNotifUI();
+restoreTimer();
 </script>
 </body>
 </html>
